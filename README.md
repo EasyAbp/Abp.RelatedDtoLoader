@@ -16,32 +16,21 @@ An Abp module to help you automatically load related DTO (like ProductDto in Ord
 
 # Usage
 
-1. Make your `Order` and `Product` aggregate roots look like this.
+1. Make your `Order` aggregate root like this.
 
     ```
         public class Order : AggregateRoot<Guid>
         {
             public virtual Guid ProductId { get; protected set; }
             
-            // Without: public virtual Product Product { get; set; }
+            // Do not add navigation properties to other aggregate roots!
+            // public virtual Product Product { get; set; }
     
             protected Order() { }
             
             public Order(Guid id, Guid productId) : base(id)
             {
                 ProductId = productId;
-            }
-        }
-        
-        public class Product : AggregateRoot<Guid>
-        {
-            public virtual string Name { get; protected set; }
-    
-            protected Product() { }
-            
-            public Product(Guid id, string name) : base(id)
-            {
-                Name = name;
             }
         }
     ```
