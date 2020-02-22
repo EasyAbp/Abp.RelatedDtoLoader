@@ -83,7 +83,7 @@ An Abp module to help you automatically load related DTO (like ProductDto in Ord
     
                 var orderDto = ObjectMapper.Map<Order, OrderDto>(order);
                 
-                return await _RelatedDtoLoader.LoadAsync(orderDto);   // orderDto.Product should be loaded.
+                return await _relatedDtoLoader.LoadAsync(orderDto);   // orderDto.Product should have been loaded.
             }
         }
     ```
