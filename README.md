@@ -16,7 +16,7 @@ An Abp module to help you automatically load related DTO (like ProductDto in Ord
 
 # Usage
 
-1. Make your `Order` aggregate root like this.
+1. Make your `Order` **entity** (aggregate root) like this.
 
     ```
         public class Order : AggregateRoot<Guid>
@@ -35,7 +35,7 @@ An Abp module to help you automatically load related DTO (like ProductDto in Ord
         }
     ```
 
-1. Add `RelatedDto` attribute to `Product` property in `OrderDto`.
+1. Add `RelatedDto` attribute in Order **DTO**.
 
     ```
         public class OrderDto : EntityDto<Guid>
