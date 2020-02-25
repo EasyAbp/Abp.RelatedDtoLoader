@@ -83,10 +83,10 @@ See more: [Custom DTO source examples](doc/CustomDtoSource.md).
 
 - [x] Custom DTO source
 - [ ] Support one-to-many relation
-- [ ] Support non Guid keys
+- [x] Support non Guid keys
 - [ ] Support nested DTOs loading
 - [ ] Get duplicate DTO from memory
 - [ ] An option to enable loading deleted DTO
-- [ ] Unit test
+- [x] Unit test
 
 Thanks [@wakuflair](https://github.com/wakuflair) and [@itryan](https://github.com/itryan) for their contribution in the first version.
