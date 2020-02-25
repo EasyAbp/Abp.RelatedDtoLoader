@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Domain.Entities;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
@@ -18,48 +16,50 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             _profile = profile;
         }
 
-        public async Task<TEntityDto> LoadAsync<TEntityDto>(TEntityDto entityDto) where TEntityDto : class, IEntityDto
+        public async Task<TDto> LoadAsync<TDto>(TDto targetDto)
+            where TDto : class
         {
-            return (await LoadAsync(new[] {entityDto}).ConfigureAwait(false)).First();
+            return (await LoadListAsync(new[] { targetDto }).ConfigureAwait(false)).First();
         }
 
-        public async Task<TEntityDto[]> LoadAsync<TEntityDto>(TEntityDto[] entityDtos)
-            where TEntityDto : class, IEntityDto
+        public async Task<IEnumerable<TDto>> LoadListAsync<TDto>(IEnumerable<TDto> targetDtos)
+            where TDto : class
         {
-            return await LoadAsync(entityDtos, entityDtos).ConfigureAwait(false);
+            return await LoadListAsync(targetDtos, targetDtos).ConfigureAwait(false);
         }
 
-        public async Task<TEntityDto> LoadAsync<TEntityDto, TIdFromType>(TEntityDto entityDto, TIdFromType idFromObject)
-            where TEntityDto : class, IEntityDto where TIdFromType : class
+        public async Task<TDto> LoadAsync<TDto, TKeyProvider>(TDto targetDto, TKeyProvider keyProvider)
+            where TDto : class
+            where TKeyProvider : class
         {
-            return (await LoadAsync(new[] {entityDto}, new[] {idFromObject}).ConfigureAwait(false)).First();
+            return (await LoadListAsync(new[] { targetDto }, new[] { keyProvider }).ConfigureAwait(false)).First();
         }
 
-        public async Task<TEntityDto[]> LoadAsync<TEntityDto, TIdFromType>(TEntityDto[] entityDtos, TIdFromType[] idFromObjects)
-            where TEntityDto : class, IEntityDto
-            where TIdFromType : class
+        public async Task<IEnumerable<TDto>> LoadListAsync<TDto, TKeyProvider>(IEnumerable<TDto> targetDtos, IEnumerable<TKeyProvider> keyProviders)
+            where TDto : class
+            where TKeyProvider : class
         {
-            var dtoType = typeof(TEntityDto);
+            var dtoType = typeof(TDto);
 
-            var idFromType = typeof(TIdFromType);
-            
+            var keyProviderType = typeof(TKeyProvider);
+
             foreach (var property in dtoType.GetProperties())
             {
                 var attribute = property.GetCustomAttribute<RelatedDtoAttribute>(true);
-                
+
                 if (attribute == null)
                 {
                     continue;
                 }
 
-                var idProperty = idFromType.GetProperty(attribute.IdPropertyName ?? property.Name + "Id",
+                var idProperty = keyProviderType.GetProperty(attribute.IdPropertyName ?? property.Name + "Id",
                     BindingFlags.Public | BindingFlags.Instance);
-                
+
                 if (idProperty == null)
                 {
                     continue;
                 }
-                
+
                 var loaderRule = _profile.GetRule(property.PropertyType);
 
                 if (loaderRule == null)
@@ -67,17 +67,17 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                     continue;
                 }
 
-                var ids = idFromObjects.Select(dto => (Guid?) idProperty.GetValue(dto));
-                
-                var relatedDtos = await loaderRule.LoadDtoObjectsAsync(ids).ConfigureAwait(false);
-                
-                for (var index = 0; index < entityDtos.Length; index++)
+                var ids = keyProviders.Select(dto => idProperty.GetValue(dto)).ToArray();
+
+                var relatedDtos = (await loaderRule.LoadDtoObjectsAsync(ids).ConfigureAwait(false)).ToArray();
+
+                for (var index = 0; index < targetDtos.Count(); index++)
                 {
-                    property.SetValue(entityDtos[index], relatedDtos[index]);
+                    property.SetValue(targetDtos.ElementAt(index), relatedDtos.ElementAt(index));
                 }
             }
 
-            return entityDtos;
+            return targetDtos;
         }
     }
 }

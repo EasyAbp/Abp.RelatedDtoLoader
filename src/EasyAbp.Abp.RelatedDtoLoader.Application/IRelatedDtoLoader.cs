@@ -1,22 +1,23 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
     public interface IRelatedDtoLoader
     {
-        Task<TEntityDto> LoadAsync<TEntityDto>(TEntityDto entityDto)
-            where TEntityDto : class, IEntityDto;
+        Task<TDto> LoadAsync<TDto>(TDto targetDto)
+            where TDto : class;
 
-        Task<TEntityDto[]> LoadAsync<TEntityDto>(TEntityDto[] entityDtos)
-            where TEntityDto : class, IEntityDto;
+        Task<IEnumerable<TDto>> LoadListAsync<TDto>(IEnumerable<TDto> targetDtos)
+            where TDto : class;
 
-        Task<TEntityDto> LoadAsync<TEntityDto, TIdFromType>(TEntityDto entityDto, TIdFromType idFromObject)
-            where TEntityDto : class, IEntityDto
-            where TIdFromType : class;
+        Task<TDto> LoadAsync<TDto, TKeyProvider>(TDto targetDto, TKeyProvider keyProvider)
+            where TDto : class
+            where TKeyProvider : class;
 
-        Task<TEntityDto[]> LoadAsync<TEntityDto, TIdFromType>(TEntityDto[] entityDtos, TIdFromType[] idFromObjects) 
-            where TEntityDto : class, IEntityDto 
-            where TIdFromType : class;
+        Task<IEnumerable<TDto>> LoadListAsync<TDto, TKeyProvider>(IEnumerable<TDto> targetDtos, IEnumerable<TKeyProvider> keyProviders)
+            where TDto : class
+            where TKeyProvider : class;
     }
 }

@@ -8,13 +8,13 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 {
     public interface IRelatedDtoLoaderProfile
     {
-        IRelatedDtoLoaderRule<TEntityDto> CreateRule<TEntityDto, TEntity>() 
-            where TEntityDto : class, IEntityDto
-            where TEntity : class, IEntity<Guid>;
+        IRelatedDtoLoaderRule<TDto, TKey> CreateRule<TDto, TEntity, TKey>() 
+            where TDto : class, IEntityDto
+            where TEntity : class, IEntity<TKey>;
 
-        IRelatedDtoLoaderRule<TEntityDto> CreateRule<TEntityDto>(
-            Func<IEnumerable<Guid?>, Task<TEntityDto[]>> source)
-            where TEntityDto : class, IEntityDto;
+        IRelatedDtoLoaderRule<TDto, TKey> CreateRule<TDto, TKey>(
+            Func<IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
+            where TDto : class, IEntityDto;  
         
         IRelatedDtoLoaderRule GetRule(Type type);            
     }

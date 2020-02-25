@@ -17,32 +17,32 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             _serviceProvider = serviceProvider;
             
             Rules = new Dictionary<Type, IRelatedDtoLoaderRule>();
-
-            // Example: CreateRule<ProductDto, Product>();
         }
 
-        public IRelatedDtoLoaderRule<TEntityDto> CreateRule<TEntityDto, TEntity>() 
-            where TEntityDto : class, IEntityDto 
+        public IRelatedDtoLoaderRule<TDto, Guid> CreateRule<TDto, TEntity>()
+            where TDto : class, IEntityDto
             where TEntity : class, IEntity<Guid>
         {
-            var rule = new RelatedDtoLoaderRule<TEntityDto>(_serviceProvider);
-            
-            rule.SetEntitySource<TEntity>();
+            return CreateRule<TDto, TEntity, Guid>();
+        }
 
-            Rules[typeof(TEntityDto)] = rule;
+        public IRelatedDtoLoaderRule<TDto, TKey> CreateRule<TDto, TEntity, TKey>() 
+            where TDto : class, IEntityDto 
+            where TEntity : class, IEntity<TKey>
+        {
+            var rule = new RelatedEntityDtoLoaderRule<TDto, TEntity, TKey>(_serviceProvider);
+            
+            Rules[typeof(TDto)] = rule;
 
             return rule;
         }
 
-        public IRelatedDtoLoaderRule<TEntityDto> CreateRule<TEntityDto>(
-            Func<IEnumerable<Guid?>, Task<TEntityDto[]>> source)
-            where TEntityDto : class, IEntityDto
+        public IRelatedDtoLoaderRule<TDto, TKey> CreateRule<TDto, TKey>(Func<IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
+            where TDto : class, IEntityDto
         {
-            var rule = new RelatedDtoLoaderRule<TEntityDto>(_serviceProvider);
+            var rule = new RelatedDtoLoaderRule<TDto, TKey>(source);
 
-            rule.SetCustomSource(source);
-
-            Rules[typeof(TEntityDto)] = rule;
+            Rules[typeof(TDto)] = rule;
 
             return rule;
         }
