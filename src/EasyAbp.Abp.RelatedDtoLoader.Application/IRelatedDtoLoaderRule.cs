@@ -7,11 +7,11 @@ namespace EasyAbp.Abp.RelatedDtoLoader
     public interface IRelatedDtoLoaderRule<TDto, TKey> : IRelatedDtoLoaderRule
         where TDto : class, IEntityDto
     {
-        Task<TDto> LoadDtoAsync(TKey id);
+        Task<IEnumerable<TDto>> LoadAsync(IEnumerable<TKey> ids);
     }  
     
     public interface IRelatedDtoLoaderRule 
     {
-        Task<IEnumerable<object>> LoadDtoObjectsAsync(IEnumerable<object> ids);
+        Task<IEnumerable<object>> LoadAsObjectAsync(IEnumerable<object> ids);
     }
 }

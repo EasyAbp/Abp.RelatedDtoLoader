@@ -21,20 +21,16 @@ namespace EasyAbp.Abp.RelatedDtoLoader
         {
             Rule = rule;
         }
-      
-        public async Task<TDto> LoadDtoAsync(TKey id)
-        {
-            return (await LoadDtosAsync(new TKey[] {id})).First();
-        }
         
-        public async Task<IEnumerable<TDto>> LoadDtosAsync(IEnumerable<TKey> ids)
+        public async Task<IEnumerable<TDto>> LoadAsync(IEnumerable<TKey> ids)
         {
             return await Rule(ids);
         }
 
-        public async Task<IEnumerable<object>> LoadDtoObjectsAsync(IEnumerable<object> ids)
+        public async Task<IEnumerable<object>> LoadAsObjectAsync(IEnumerable<object> ids)
         {
             var convertedIds = ids.Select(x => (TKey)x);
+            
             return (await Rule(convertedIds).ConfigureAwait(false)).AsEnumerable<object>().ToArray();
         }
     }

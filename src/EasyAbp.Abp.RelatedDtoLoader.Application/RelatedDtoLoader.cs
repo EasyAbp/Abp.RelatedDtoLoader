@@ -67,9 +67,9 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                     continue;
                 }
 
-                var ids = keyProviders.Select(dto => idProperty.GetValue(dto)).ToArray();
+                var ids = keyProviders.Select(provider => idProperty.GetValue(provider)).ToArray();
 
-                var relatedDtos = (await loaderRule.LoadDtoObjectsAsync(ids).ConfigureAwait(false)).ToArray();
+                var relatedDtos = (await loaderRule.LoadAsObjectAsync(ids).ConfigureAwait(false)).ToArray();
 
                 for (var index = 0; index < targetDtos.Count(); index++)
                 {
