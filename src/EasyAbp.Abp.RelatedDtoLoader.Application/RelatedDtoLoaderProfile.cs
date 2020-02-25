@@ -36,6 +36,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
             return rule;
         }
+        
+        public IRelatedDtoLoaderRule<TDto, Guid> CreateRule<TDto>(Func<IEnumerable<Guid>, Task<IEnumerable<TDto>>> source)
+            where TDto : class, IEntityDto
+        {
+            return CreateRule<TDto, Guid>(source);
+        }
 
         public IRelatedDtoLoaderRule<TDto, TKey> CreateRule<TDto, TKey>(Func<IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
             where TDto : class, IEntityDto
