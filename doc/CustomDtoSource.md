@@ -7,7 +7,7 @@ Get DTOs from application service
     {
         public MyProjectRelatedDtoLoaderProfile(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            CreateRule(async ids =>
+            CreateRule<ProductDto>(async ids =>
             {
                 var dtos = new List<ProductDto>();
                 
@@ -17,11 +17,11 @@ Get DTOs from application service
                     
                     foreach (var id in ids)
                     {
-                        dtos.Add(id.HasValue ? await productAppService.GetAsync(id.Value) : null);
+                        dtos.Add(await productAppService.GetAsync(id));
                     }
                 }
 
-                return dtos.ToArray();
+                return dtos;
             });
         }
     }

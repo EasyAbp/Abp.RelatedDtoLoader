@@ -54,7 +54,14 @@ An Abp module to help you automatically load related DTO (like ProductDto in Ord
         {
             public MyRelatedDtoLoaderProfile(IServiceProvider serviceProvider) : base(serviceProvider)
             {
-                CreateRule<ProductDto, Product>();
+                // These rules will get entities from generic repository and map them to DTOs.
+                
+                CreateRule<ProductDto, Product>();  // For Guid (by default) primary key.
+                CreateRule<CityDto, City, int>();   // For int primary key.
+                
+                // Custom DTO source.
+                
+                CreateRule(GetOrderDtosAsync);
             }
         }
     ```

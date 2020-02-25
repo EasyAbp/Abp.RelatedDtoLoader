@@ -67,6 +67,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                     continue;
                 }
 
+                // Todo: Skip null foreign key.
                 var ids = keyProviders.Select(provider => idProperty.GetValue(provider)).ToArray();
 
                 var relatedDtos = (await loaderRule.LoadAsObjectAsync(ids).ConfigureAwait(false)).ToArray();
