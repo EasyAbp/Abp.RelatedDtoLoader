@@ -23,7 +23,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
         public async Task<IEnumerable<TDto>> LoadAsync(IEnumerable<TKey> ids)
         {
-            return await Rule(ids);
+            return await Rule(ids).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<object>> LoadAsObjectAsync(IEnumerable<object> ids)
