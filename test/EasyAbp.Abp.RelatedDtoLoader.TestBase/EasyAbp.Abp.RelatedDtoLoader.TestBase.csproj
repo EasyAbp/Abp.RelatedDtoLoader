@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Ddd.Domain" Version="2.1.1" />
+    <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\EasyAbp.Abp.RelatedDtoLoader.Application.Contracts\EasyAbp.Abp.RelatedDtoLoader.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\EasyAbp.Abp.RelatedDtoLoader.Application\EasyAbp.Abp.RelatedDtoLoader.Application.csproj" />
+  </ItemGroup>
+
+</Project>

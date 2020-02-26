@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.ObjectMapping;
@@ -11,7 +9,7 @@ using Volo.Abp.Domain.Repositories;
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
     public class RelatedEntityDtoLoaderRule<TDto, TEntity, TKey> : RelatedDtoLoaderRule<TDto, TKey>
-        where TDto : class, IEntityDto
+        where TDto : class, IEntityDto<TKey>
         where TEntity : class, IEntity<TKey>
     {
         protected readonly IServiceProvider _serviceProvider;

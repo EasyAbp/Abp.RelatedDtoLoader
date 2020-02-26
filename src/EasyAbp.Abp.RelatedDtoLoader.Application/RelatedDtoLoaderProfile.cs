@@ -19,15 +19,15 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             Rules = new Dictionary<Type, IRelatedDtoLoaderRule>();
         }
 
-        public IRelatedDtoLoaderRule<TDto, Guid> CreateRule<TDto, TEntity>()
-            where TDto : class, IEntityDto
+        public IRelatedDtoLoaderRule CreateRule<TDto, TEntity>()
+            where TDto : class, IEntityDto<Guid>
             where TEntity : class, IEntity<Guid>
         {
             return CreateRule<TDto, TEntity, Guid>();
         }
 
-        public IRelatedDtoLoaderRule<TDto, TKey> CreateRule<TDto, TEntity, TKey>() 
-            where TDto : class, IEntityDto 
+        public IRelatedDtoLoaderRule CreateRule<TDto, TEntity, TKey>() 
+            where TDto : class, IEntityDto<TKey>
             where TEntity : class, IEntity<TKey>
         {
             var rule = new RelatedEntityDtoLoaderRule<TDto, TEntity, TKey>(_serviceProvider);
@@ -36,15 +36,15 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
             return rule;
         }
-        
-        public IRelatedDtoLoaderRule<TDto, Guid> CreateRule<TDto>(Func<IEnumerable<Guid>, Task<IEnumerable<TDto>>> source)
-            where TDto : class, IEntityDto
+
+        public IRelatedDtoLoaderRule CreateRule<TDto>(Func<IEnumerable<Guid>, Task<IEnumerable<TDto>>> source)
+            where TDto : class, IEntityDto<Guid>
         {
             return CreateRule<TDto, Guid>(source);
         }
 
-        public IRelatedDtoLoaderRule<TDto, TKey> CreateRule<TDto, TKey>(Func<IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
-            where TDto : class, IEntityDto
+        public IRelatedDtoLoaderRule CreateRule<TDto, TKey>(Func<IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
+            where TDto : class, IEntityDto<TKey>
         {
             var rule = new RelatedDtoLoaderRule<TDto, TKey>(source);
 
