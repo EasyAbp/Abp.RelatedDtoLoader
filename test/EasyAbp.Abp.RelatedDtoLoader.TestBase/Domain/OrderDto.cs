@@ -9,6 +9,11 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests
 
         [RelatedDto]
         public ProductDto Product { get; set; }
+        
+        public Guid? OptionalProductId { get; set; }
+
+        [RelatedDto]
+        public ProductDto OptionalProduct { get; set; }
 
         public OrderDto Clone()
         {

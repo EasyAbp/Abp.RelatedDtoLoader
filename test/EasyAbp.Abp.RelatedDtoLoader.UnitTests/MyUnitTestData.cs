@@ -25,8 +25,8 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             FirstProduct = productDto1;
             SecondProduct = productDto2;
 
-            var orderDto1 = new OrderDto() { Id = Guid.NewGuid(), ProductId = productDto2.Id };
-            var orderDto2 = new OrderDto() { Id = Guid.NewGuid() };
+            var orderDto1 = new OrderDto() { Id = Guid.NewGuid(), ProductId = productDto2.Id, OptionalProductId = productDto2.Id};
+            var orderDto2 = new OrderDto() { Id = Guid.NewGuid(), OptionalProductId = null };
 
             _orderDtos = new OrderDto[] {
                orderDto1,

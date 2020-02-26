@@ -21,12 +21,17 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             var dtoLoader = GetRelatedDtoLoader(testData);
 
             var orders = testData.OrderDtos.ToArray();
-            var firstOrder = orders.FirstOrDefault();
+            var firstOrder = orders[0];
+            var secondOrder = orders[1];
 
             await dtoLoader.LoadAsync(firstOrder);
 
             firstOrder.Product.ShouldNotBeNull();
             firstOrder.Product.Id.ShouldBe(testData.SecondProduct.Id);
+            firstOrder.OptionalProduct.ShouldNotBeNull();
+            firstOrder.OptionalProduct.Id.ShouldBe(testData.SecondProduct.Id);
+
+            secondOrder.OptionalProduct.ShouldBeNull();
         }
 
         [Fact]
@@ -37,15 +42,18 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             var dtoLoader = GetRelatedDtoLoader(testData);
 
             var orders = testData.OrderDtos.ToArray();
-            var firstOrder = orders.FirstOrDefault();
+            var firstOrder = orders[0];
+            var secondOrder = orders[1];
 
             await dtoLoader.LoadListAsync(orders);
 
             firstOrder.Product.ShouldNotBeNull();
             firstOrder.Product.Id.ShouldBe(testData.SecondProduct.Id);
+            firstOrder.OptionalProduct.ShouldNotBeNull();
+            firstOrder.OptionalProduct.Id.ShouldBe(testData.SecondProduct.Id);
 
-            var secondOrder = orders[1];
-            secondOrder.Product.ShouldBeNull();
+            secondOrder.OptionalProduct.ShouldBeNull();
+
         }
 
         private static RelatedDtoLoader GetRelatedDtoLoader(MyUnitTestData testData)
