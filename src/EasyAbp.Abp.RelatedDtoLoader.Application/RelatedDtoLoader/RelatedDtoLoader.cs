@@ -23,35 +23,33 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
             var keyProviderType = typeof(TKeyProvider);
 
-            var propsForRelatedDto = targetDtoType.GetProperties()
-                 .Select(x => new { Property = x, RelatedDtoAttribute = (RelatedDtoAttribute)x.GetCustomAttribute(typeof(RelatedDtoAttribute), true) })
-                 .Where(x => x.RelatedDtoAttribute != null)
-                 .ToArray();
+            var isKeyProviderSameType = targetDtoType == keyProviderType;
 
             var arrTargetDtos = targetDtos.ToArray();
             var arrKeyProviders = keyProviders.ToArray();
-            
-            foreach (var propForRelatedDto in propsForRelatedDto)
-            {
-                var property = propForRelatedDto.Property;
-                var attribute = propForRelatedDto.RelatedDtoAttribute;
 
-                var idProperty = keyProviderType.GetProperty(attribute.IdPropertyName ?? property.Name + "Id",
-                    BindingFlags.Public | BindingFlags.Instance);
+            var relatedDtoProperties = _profile.GetTargetDtoProperties(targetDtoType);
+
+            foreach (var relatedDtoProperty in relatedDtoProperties)
+            {
+                var dtoProperty = relatedDtoProperty.DtoProperty;
+                var attribute = relatedDtoProperty.Attribute;
+
+                var idProperty = isKeyProviderSameType
+                    ? relatedDtoProperty.DtoIdProperty
+                    : keyProviderType.GetProperty(attribute.IdPropertyName ?? dtoProperty.Name + "Id", BindingFlags.Public | BindingFlags.Instance);
 
                 if (idProperty == null)
                 {
                     continue;
                 }
 
-                var loaderRule = _profile.GetRule(property.PropertyType);
+                var loaderRule = _profile.GetRule(dtoProperty.PropertyType);
 
                 if (loaderRule == null)
                 {
                     continue;
                 }
-
-                // Todo: Skip null foreign key.
 
                 var keyProviderWithIds = arrKeyProviders.ToDictionary(x => x, dto => idProperty.GetValue(dto));
                 var idsToLoad = keyProviderWithIds.Values.Where(x => x != null).ToArray();
@@ -74,18 +72,18 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                     var desiredDtoKey = keyProviderWithIds[keyProvider];
 
                     if (desiredDtoKey != null)
-                    {
-                        propValue = GetSingleDesiredDto(desiredDtoKey, dictLoadedDtos);
+                    {                                               
+                        propValue = GetDesiredDto(desiredDtoKey, dictLoadedDtos);                        
                     }
 
-                    property.SetValue(targetDto, propValue);
+                    dtoProperty.SetValue(targetDto, propValue);
                 }
             }
 
             return arrTargetDtos;
         }
 
-        private TDto GetSingleDesiredDto<TDto>(object desiredKey, Dictionary<object, TDto> availableDtos)
+        private TDto GetDesiredDto<TDto>(object desiredKey, Dictionary<object, TDto> availableDtos)
             where TDto : class
         {
             if (availableDtos.TryGetValue(desiredKey, out var dto))

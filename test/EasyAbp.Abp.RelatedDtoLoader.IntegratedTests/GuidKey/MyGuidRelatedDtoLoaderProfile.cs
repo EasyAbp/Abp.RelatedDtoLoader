@@ -8,6 +8,8 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
         public MyGuidRelatedDtoLoaderProfile(IServiceProvider serviceProvider) 
             : base(serviceProvider)
         {
+            AddTargetDtoType<OrderDto>();
+
             CreateRule<ProductDto, Product>();
         }
     }
