@@ -16,7 +16,7 @@ An Abp module to help you automatically load related DTO (like ProductDto in Ord
 
 # Usage
 
-1. Make your `Order` **entity** (aggregate root) like this.
+1. Make your `Order` **entity** (or aggregate root) like this.
 
     ```
         public class Order : AggregateRoot<Guid>
@@ -35,7 +35,7 @@ An Abp module to help you automatically load related DTO (like ProductDto in Ord
         }
     ```
 
-1. Add `RelatedDto` attribute in Order **DTO**.
+1. Add `RelatedDto` attribute in `OrderDto`.
 
     ```
         public class OrderDto : EntityDto<Guid>
@@ -71,7 +71,16 @@ An Abp module to help you automatically load related DTO (like ProductDto in Ord
     ```
         public class OrderAppService : ApplicationService, IOrderAppService
         {
-            // ...
+            private readonly IRelatedDtoLoader _relatedDtoLoader;
+            private readonly IRepository<Order, Guid> _orderRepository;
+            
+            public OrderAppService(
+                IRelatedDtoLoader relatedDtoLoader,
+                IRepository<Order, Guid> orderRepository)
+            {
+                _relatedDtoLoader = relatedDtoLoader;
+                _orderRepository = orderRepository;
+            }
             
             public async Task<OrderDto> GetAsync(Guid id)
             {
