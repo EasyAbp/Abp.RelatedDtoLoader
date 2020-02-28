@@ -11,7 +11,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
 {
     public class RelatedDtoLoader_Test
     {
-        private MyUnitTestData _testData = new MyUnitTestData();
+        private readonly MyUnitTestData _testData = new MyUnitTestData();
 
         [Fact]
         public async Task Should_Load_Related_ProductDto_for_Single()
@@ -72,6 +72,17 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             firstOrder.Product.Id.ShouldBe(testData.SecondProduct.Id);
         }
 
+        [Fact]
+        public async Task Should_Throw_Exception_for_Unsupported_TargetDto()
+        {
+            var testData = _testData;
+
+            var dtoLoader = GetRelatedDtoLoader(testData);
+
+            var unsupportedOrder = new UnsupportedOrderDto();
+
+            await Should.ThrowAsync<UnsupportedTargetTypeException>(dtoLoader.LoadAsync(unsupportedOrder));
+        }
 
         private static RelatedDtoLoader GetRelatedDtoLoader(MyUnitTestData testData)
         {
@@ -90,7 +101,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             var fakeProfile = new Mock<IRelatedDtoLoaderProfile>();
             fakeProfile.Setup(x => x.GetRule(typeof(ProductDto)))
                 .Returns(fakeProductRule.Object);
-            fakeProfile.Setup(x => x.GetTargetDtoProperties(typeof(OrderDto)))
+            fakeProfile.Setup(x => x.GetRelatedDtoProperties(typeof(OrderDto)))
                 .Returns(orderRelatedDtoProperties);
 
             var dtoLoader = new RelatedDtoLoader(fakeProfile.Object);

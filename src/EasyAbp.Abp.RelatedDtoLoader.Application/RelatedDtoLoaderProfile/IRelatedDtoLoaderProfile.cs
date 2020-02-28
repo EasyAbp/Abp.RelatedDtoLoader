@@ -4,7 +4,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 {
     public interface IRelatedDtoLoaderProfile
     {
-        RelatedDtoPropertyCollection GetTargetDtoProperties(Type type);
+        RelatedDtoPropertyCollection GetRelatedDtoProperties(Type targetDtoType);
 
         IDtoLoadRule GetRule(Type type);
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -21,14 +22,17 @@ namespace EasyAbp.Abp.RelatedDtoLoader
         {
             var targetDtoType = typeof(TTargetDto);
 
+            var relatedDtoProperties = _profile.GetRelatedDtoProperties(targetDtoType);
+
+            if (relatedDtoProperties == null)
+            {
+                throw new UnsupportedTargetTypeException(targetDtoType);
+            }
+
             var keyProviderType = typeof(TKeyProvider);
-
             var isKeyProviderSameType = targetDtoType == keyProviderType;
-
             var arrTargetDtos = targetDtos.ToArray();
             var arrKeyProviders = keyProviders.ToArray();
-
-            var relatedDtoProperties = _profile.GetTargetDtoProperties(targetDtoType);
 
             foreach (var relatedDtoProperty in relatedDtoProperties)
             {

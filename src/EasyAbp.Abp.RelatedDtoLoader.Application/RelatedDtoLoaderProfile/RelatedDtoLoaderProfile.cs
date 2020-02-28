@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
@@ -11,15 +13,21 @@ namespace EasyAbp.Abp.RelatedDtoLoader
     {
         private readonly IServiceProvider _serviceProvider;
 
-        private Dictionary<Type, IDtoLoadRule> RelatedDtoRules { get; }
+        private ConcurrentDictionary<Type, IDtoLoadRule> RelatedDtoRules { get; }
 
-        private Dictionary<Type, RelatedDtoPropertyCollection> _targetDtoPropertyCollection = new Dictionary<Type, RelatedDtoPropertyCollection>();
+        private readonly ConcurrentDictionary<Type, RelatedDtoPropertyCollection> _targetDtoPropertyCollection = new ConcurrentDictionary<Type, RelatedDtoPropertyCollection>();
+
+        protected readonly ConcurrentQueue<Type> _unsupportedTargetDtoTypes = null;
+
+        protected int InvalidTargetDtoTypeCacheCount = 10;
 
         public RelatedDtoLoaderProfile(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             
-            RelatedDtoRules = new Dictionary<Type, IDtoLoadRule>();
+            RelatedDtoRules = new ConcurrentDictionary<Type, IDtoLoadRule>();
+
+            _unsupportedTargetDtoTypes = new ConcurrentQueue<Type>();
         }
 
         protected IDtoLoadRule CreateRule<TDto, TEntity>()
@@ -61,24 +69,44 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             return !RelatedDtoRules.TryGetValue(type, out var rule) ? null : rule;
         }
 
-        protected RelatedDtoPropertyCollection AddTargetDtoType<TTargetDto>()
-            where TTargetDto : class
+        public RelatedDtoPropertyCollection GetRelatedDtoProperties(Type targetDtoType)
         {
-            return AddTargetDtoType(typeof(TTargetDto));
+            RelatedDtoPropertyCollection props;
+
+            if (_targetDtoPropertyCollection.TryGetValue(targetDtoType, out props) || _unsupportedTargetDtoTypes.Contains(targetDtoType))
+                return props;
+
+            props = CacheTargetDtoType(targetDtoType);
+
+            return props;
         }
 
-        protected RelatedDtoPropertyCollection AddTargetDtoType(Type targetDtoType)
+        protected RelatedDtoPropertyCollection CacheTargetDtoType(Type targetDtoType)
         {
-            var targetDtoRule = new RelatedDtoPropertyCollection(targetDtoType);
+            var props = new RelatedDtoPropertyCollection(targetDtoType);
 
-            _targetDtoPropertyCollection.Add(targetDtoType, targetDtoRule);
+            if (props.Any())
+            {
+                _targetDtoPropertyCollection.TryAdd(targetDtoType, props);
+            }
+            else
+            {
+                CacheInvalidTargetDtoType(targetDtoType);
+                props = null;
+            }
 
-            return targetDtoRule;
-        }        
-
-        public RelatedDtoPropertyCollection GetTargetDtoProperties(Type type)
-        {
-            return _targetDtoPropertyCollection.ContainsKey(type) ? _targetDtoPropertyCollection[type] : null;
+            return props;
         }
+
+        protected void CacheInvalidTargetDtoType(Type targetDtoType)
+        {
+            if (_unsupportedTargetDtoTypes.Count() >= InvalidTargetDtoTypeCacheCount)
+            {
+                _unsupportedTargetDtoTypes.TryDequeue(out _);
+            }
+
+            _unsupportedTargetDtoTypes.Enqueue(targetDtoType);
+        }
+
     }
 }

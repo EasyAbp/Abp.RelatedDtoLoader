@@ -8,8 +8,6 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
         public MyIntegerRelatedDtoLoaderProfile(IServiceProvider serviceProvider) 
             : base(serviceProvider)
         {
-            AddTargetDtoType<IntOrderDto>();
-
             CreateRule<IntProductDto, IntProduct, int>();
         }
     }

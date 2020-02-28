@@ -256,3 +256,4 @@ host/AwesomeAbp.RelatedEntityDtoLoader.IdentityServer/Logs/logs.txt
 host/AwesomeAbp.RelatedEntityDtoLoader.HttpApi.Host/Logs/logs.txt
 host/AwesomeAbp.RelatedEntityDtoLoader.Web.Host/Logs/logs.txt
 host/AwesomeAbp.RelatedEntityDtoLoader.Web.Unified/Logs/logs.txt
+obj
