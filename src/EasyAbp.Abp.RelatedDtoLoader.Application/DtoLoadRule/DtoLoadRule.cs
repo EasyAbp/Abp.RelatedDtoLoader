@@ -6,18 +6,18 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
-    public class RelatedDtoLoaderRule<TDto, TKey> : IRelatedDtoLoaderRule
+    public class DtoLoadRule<TDto, TKey> : IDtoLoadRule
         where TDto : class, IEntityDto<TKey>
     {        
         protected Func<IEnumerable<TKey>, Task<IEnumerable<TDto>>> Rule { get; set; }
 
-        public RelatedDtoLoaderRule(Func<IEnumerable<TKey>, Task<IEnumerable<TDto>>> rule)
+        public DtoLoadRule(Func<IEnumerable<TKey>, Task<IEnumerable<TDto>>> rule)
            : this()
         {
             Rule = rule;
         }
 
-        protected RelatedDtoLoaderRule()
+        protected DtoLoadRule()
         {
         }
 

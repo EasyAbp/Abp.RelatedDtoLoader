@@ -8,20 +8,20 @@ using Volo.Abp.Domain.Repositories;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
-    public class RelatedEntityDtoLoaderRule<TDto, TEntity, TKey> : RelatedDtoLoaderRule<TDto, TKey>
+    public class EntityDtoLoadRule<TDto, TEntity, TKey> : DtoLoadRule<TDto, TKey>
         where TDto : class, IEntityDto<TKey>
         where TEntity : class, IEntity<TKey>
     {
         protected readonly IServiceProvider _serviceProvider;
 
-        public RelatedEntityDtoLoaderRule(IServiceProvider serviceProvider)
+        public EntityDtoLoadRule(IServiceProvider serviceProvider)
             : base()
         {
             _serviceProvider = serviceProvider;
-            SeTDtoRule();
+            SetDtoRule();
         }
 
-        private void SeTDtoRule()
+        private void SetDtoRule()
         {
             Rule = async ids =>
             {

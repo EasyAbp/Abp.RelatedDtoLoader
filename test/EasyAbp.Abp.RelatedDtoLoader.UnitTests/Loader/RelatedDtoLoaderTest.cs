@@ -11,7 +11,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
 {
     public class RelatedDtoLoader_Test
     {
-        private MyUnitTestData _testData = new MyUnitTestData();
+        private readonly MyUnitTestData _testData = new MyUnitTestData();
 
         [Fact]
         public async Task Should_Load_Related_ProductDto_for_Single()
@@ -56,9 +56,37 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
 
         }
 
+        [Fact]
+        public async Task Should_Load_Related_OptionalProductDto_for_Single()
+        {
+            var testData = _testData;
+
+            var dtoLoader = GetRelatedDtoLoader(testData);
+
+            var orders = testData.OrderDtos.ToArray();
+            var firstOrder = orders.FirstOrDefault();
+
+            await dtoLoader.LoadAsync(firstOrder);
+
+            firstOrder.OptionalProduct.ShouldNotBeNull();
+            firstOrder.Product.Id.ShouldBe(testData.SecondProduct.Id);
+        }
+
+        [Fact]
+        public async Task Should_Throw_Exception_for_Unsupported_TargetDto()
+        {
+            var testData = _testData;
+
+            var dtoLoader = GetRelatedDtoLoader(testData);
+
+            var unsupportedOrder = new UnsupportedOrderDto();
+
+            await Should.ThrowAsync<UnsupportedTargetTypeException>(dtoLoader.LoadAsync(unsupportedOrder));
+        }
+
         private static RelatedDtoLoader GetRelatedDtoLoader(MyUnitTestData testData)
         {
-            var fakeProductRule = new Mock<IRelatedDtoLoaderRule>();
+            var fakeProductRule = new Mock<IDtoLoadRule>();
 
             fakeProductRule.Setup(x => x.LoadAsObjectAsync(It.IsAny<IEnumerable<object>>()))
                 .Returns<IEnumerable<object>>(ids => {
@@ -68,9 +96,13 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             fakeProductRule.Setup(x => x.GetKey(It.IsAny<object>()))
                 .Returns<object>(x => { return ((ProductDto)x).Id; });
 
+            var orderRelatedDtoProperties = new RelatedDtoPropertyCollection(typeof(OrderDto));
+
             var fakeProfile = new Mock<IRelatedDtoLoaderProfile>();
             fakeProfile.Setup(x => x.GetRule(typeof(ProductDto)))
                 .Returns(fakeProductRule.Object);
+            fakeProfile.Setup(x => x.GetRelatedDtoProperties(typeof(OrderDto)))
+                .Returns(orderRelatedDtoProperties);
 
             var dtoLoader = new RelatedDtoLoader(fakeProfile.Object);
 
