@@ -5,9 +5,11 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
 {
     public class MyIntegerRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
     {
-        public MyIntegerRelatedDtoLoaderProfile(IServiceProvider serviceProvider) 
-            : base(serviceProvider)
+        public MyIntegerRelatedDtoLoaderProfile() 
+            : base()
         {
+            AddModule<RelatedDtoLoaderTestBaseModule>();
+
             CreateRule<IntProductDto, IntProduct, int>();
         }
     }
