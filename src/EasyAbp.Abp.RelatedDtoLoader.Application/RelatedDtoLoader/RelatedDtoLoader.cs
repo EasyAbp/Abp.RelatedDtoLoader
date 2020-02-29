@@ -7,7 +7,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
-    public class RelatedDtoLoader : IRelatedDtoLoader, ISingletonDependency
+    public class RelatedDtoLoader : IRelatedDtoLoader, ITransientDependency
     {
         private readonly IServiceProvider _serviceProvider;
 
