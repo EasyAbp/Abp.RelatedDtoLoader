@@ -100,6 +100,7 @@ See more: [Custom DTO source examples](doc/CustomDtoSource.md).
 - [x] Custom DTO source
 - [ ] Support one-to-many relation
 - [x] Support non Guid keys
+- [ ] Support multi module development
 - [ ] Support nested DTOs loading
 - [ ] Get duplicate DTO from memory
 - [ ] An option to enable loading deleted DTO
