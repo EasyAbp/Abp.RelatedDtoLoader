@@ -10,7 +10,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
         public readonly ProductDto FirstProduct;
         public readonly ProductDto SecondProduct;
 
-        private OrderDto[] _orderDtos;
+        private readonly OrderDto[] _orderDtos;
 
         public MyUnitTestData()
         {
@@ -32,7 +32,6 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
                orderDto1,
                orderDto2,
             };
-
         }
 
         public OrderDto[] OrderDtos

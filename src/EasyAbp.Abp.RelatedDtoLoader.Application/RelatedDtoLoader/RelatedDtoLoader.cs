@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -8,10 +9,13 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 {
     public class RelatedDtoLoader : IRelatedDtoLoader, ITransientDependency
     {
+        private readonly IServiceProvider _serviceProvider;
+
         private readonly IRelatedDtoLoaderProfile _profile;
 
-        public RelatedDtoLoader(IRelatedDtoLoaderProfile profile)
+        public RelatedDtoLoader(IServiceProvider serviceProvider, IRelatedDtoLoaderProfile profile)
         {
+            _serviceProvider = serviceProvider;
             _profile = profile;
         }
 
@@ -21,37 +25,38 @@ namespace EasyAbp.Abp.RelatedDtoLoader
         {
             var targetDtoType = typeof(TTargetDto);
 
+            var relatedDtoProperties = _profile.GetRelatedDtoProperties(targetDtoType);
+
+            if (relatedDtoProperties == null)
+            {
+                throw new UnsupportedTargetTypeException(targetDtoType);
+            }
+
             var keyProviderType = typeof(TKeyProvider);
-
-            var propsForRelatedDto = targetDtoType.GetProperties()
-                 .Select(x => new { Property = x, RelatedDtoAttribute = (RelatedDtoAttribute)x.GetCustomAttribute(typeof(RelatedDtoAttribute), true) })
-                 .Where(x => x.RelatedDtoAttribute != null)
-                 .ToArray();
-
+            var isKeyProviderSameType = targetDtoType == keyProviderType;
             var arrTargetDtos = targetDtos.ToArray();
             var arrKeyProviders = keyProviders.ToArray();
-            
-            foreach (var propForRelatedDto in propsForRelatedDto)
-            {
-                var property = propForRelatedDto.Property;
-                var attribute = propForRelatedDto.RelatedDtoAttribute;
 
-                var idProperty = keyProviderType.GetProperty(attribute.IdPropertyName ?? property.Name + "Id",
-                    BindingFlags.Public | BindingFlags.Instance);
+            foreach (var relatedDtoProperty in relatedDtoProperties)
+            {
+                var dtoProperty = relatedDtoProperty.DtoProperty;
+                var attribute = relatedDtoProperty.Attribute;
+
+                var idProperty = isKeyProviderSameType
+                    ? relatedDtoProperty.DtoIdProperty
+                    : keyProviderType.GetProperty(attribute.IdPropertyName ?? dtoProperty.Name + "Id", BindingFlags.Public | BindingFlags.Instance);
 
                 if (idProperty == null)
                 {
                     continue;
                 }
 
-                var loaderRule = _profile.GetRule(property.PropertyType);
+                var loaderRule = _profile.GetRule(dtoProperty.PropertyType);
 
                 if (loaderRule == null)
                 {
                     continue;
                 }
-
-                // Todo: Skip null foreign key.
 
                 var keyProviderWithIds = arrKeyProviders.ToDictionary(x => x, dto => idProperty.GetValue(dto));
                 var idsToLoad = keyProviderWithIds.Values.Where(x => x != null).ToArray();
@@ -60,7 +65,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
                 if (idsToLoad.Any())
                 {
-                    object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(idsToLoad).ConfigureAwait(false)).ToArray();
+                    object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad).ConfigureAwait(false)).ToArray();
                     dictLoadedDtos = relatedDtos.ToDictionary(x => loaderRule.GetKey(x), x => x);
                 }
 
@@ -74,18 +79,18 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                     var desiredDtoKey = keyProviderWithIds[keyProvider];
 
                     if (desiredDtoKey != null)
-                    {
-                        propValue = GetSingleDesiredDto(desiredDtoKey, dictLoadedDtos);
+                    {                                               
+                        propValue = GetDesiredDto(desiredDtoKey, dictLoadedDtos);                        
                     }
 
-                    property.SetValue(targetDto, propValue);
+                    dtoProperty.SetValue(targetDto, propValue);
                 }
             }
 
             return arrTargetDtos;
         }
 
-        private TDto GetSingleDesiredDto<TDto>(object desiredKey, Dictionary<object, TDto> availableDtos)
+        private TDto GetDesiredDto<TDto>(object desiredKey, Dictionary<object, TDto> availableDtos)
             where TDto : class
         {
             if (availableDtos.TryGetValue(desiredKey, out var dto))
@@ -94,6 +99,22 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             }
 
             return null;
+        }
+
+        private List<TDto> GetDesiredDtos<TDto>(IEnumerable<object> desiredKeys, Dictionary<object, TDto> availableDtos)
+            where TDto : class
+        {
+            List<TDto> dtos = new List<TDto>();
+
+            foreach (var desiredKey in desiredKeys)
+            {
+                if (availableDtos.TryGetValue(desiredKey, out var dto))
+                {
+                    dtos.Add(dto);
+                }
+            }
+
+            return dtos;
         }
     }
 }
