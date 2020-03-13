@@ -84,30 +84,84 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             await Should.ThrowAsync<UnsupportedTargetTypeException>(dtoLoader.LoadAsync(unsupportedOrder));
         }
 
+        [Fact]
+        public async Task Should_Load_Related_ProductCommentDtos()
+        {
+            var testData = _testData;
+
+            var dtoLoader = GetRelatedDtoLoader(testData);
+
+            var products = testData.ProductDtos.ToArray();
+            var secondProduct = products.Skip(1).FirstOrDefault();
+
+            await dtoLoader.LoadAsync(secondProduct);
+
+            secondProduct.Comments.ShouldNotBeNull();
+            secondProduct.Comments.Count().ShouldBe(2);
+
+            secondProduct.CommentsList.ShouldNotBeNull();
+            secondProduct.CommentsList.Count().ShouldBe(2);
+
+            secondProduct.CommentsReadOnlyList.ShouldNotBeNull();
+            secondProduct.CommentsReadOnlyList.Count().ShouldBe(2);
+
+            secondProduct.CommentsArray.ShouldNotBeNull();
+            secondProduct.CommentsArray.Count().ShouldBe(2);
+        }
+
         private static RelatedDtoLoader GetRelatedDtoLoader(MyUnitTestData testData)
         {
-            var fakeProductRule = new Mock<IDtoLoadRule>();
+            var fakeProfile = new Mock<IRelatedDtoLoaderProfile>();
 
-            fakeProductRule.Setup(x => x.LoadAsObjectAsync(It.IsAny<IServiceProvider>(), It.IsAny<IEnumerable<object>>()))
-                .Returns<IServiceProvider, IEnumerable<object>>((serviceProvider, ids) =>
-                {
-                    return Task.FromResult(testData.ProductDtos.Where(x => ids.Contains(x.Id)).Select(x => (object)x));
-                });
-
-            fakeProductRule.Setup(x => x.GetKey(It.IsAny<object>()))
-                .Returns<object>(x => { return ((ProductDto)x).Id; });
+            FackProduct(testData, fakeProfile);
+            FackProductComment(testData, fakeProfile);
 
             var orderRelatedDtoProperties = new RelatedDtoPropertyCollection(typeof(OrderDto));
-
-            var fakeProfile = new Mock<IRelatedDtoLoaderProfile>();
-            fakeProfile.Setup(x => x.GetRule(typeof(ProductDto)))
-                .Returns(fakeProductRule.Object);
             fakeProfile.Setup(x => x.GetRelatedDtoProperties(typeof(OrderDto)))
                 .Returns(orderRelatedDtoProperties);
 
             var dtoLoader = new RelatedDtoLoader(null, fakeProfile.Object);
 
             return dtoLoader;
+        }
+
+        private static void FackProduct(MyUnitTestData testData, Mock<IRelatedDtoLoaderProfile> fakeProfile)
+        {
+            var fakeRule = new Mock<IDtoLoadRule>();
+
+            fakeRule.Setup(x => x.LoadAsObjectAsync(It.IsAny<IServiceProvider>(), It.IsAny<IEnumerable<object>>()))
+                .Returns<IServiceProvider, IEnumerable<object>>((serviceProvider, ids) =>
+                {
+                    return Task.FromResult(testData.ProductDtos.Where(x => ids.Contains(x.Id)).Select(x => (object)x));
+                });
+
+            fakeRule.Setup(x => x.GetKey(It.IsAny<object>()))
+                .Returns<object>(x => { return ((ProductDto)x).Id; });
+
+            fakeProfile.Setup(x => x.GetRule(typeof(ProductDto)))
+                .Returns(fakeRule.Object);
+
+            var productRelatedDtoProperties = new RelatedDtoPropertyCollection(typeof(ProductDto));
+
+            fakeProfile.Setup(x => x.GetRelatedDtoProperties(typeof(ProductDto)))
+                .Returns(productRelatedDtoProperties);
+        }
+
+        private static void FackProductComment(MyUnitTestData testData, Mock<IRelatedDtoLoaderProfile> fakeProfile)
+        {
+            var fakeRule = new Mock<IDtoLoadRule>();
+
+            fakeRule.Setup(x => x.LoadAsObjectAsync(It.IsAny<IServiceProvider>(), It.IsAny<IEnumerable<object>>()))
+                .Returns<IServiceProvider, IEnumerable<object>>((serviceProvider, ids) =>
+                {
+                    return Task.FromResult(testData.ProductCommentDtos.Where(x => ids.Contains(x.Id)).Select(x => (object)x));
+                });
+
+            fakeRule.Setup(x => x.GetKey(It.IsAny<object>()))
+                .Returns<object>(x => { return ((ProductCommentDto)x).Id; });
+
+            fakeProfile.Setup(x => x.GetRule(typeof(ProductCommentDto)))
+                .Returns(fakeRule.Object);
         }
     }
 }

@@ -33,9 +33,30 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             {
                 var attribute = propForRelatedDto.RelatedDtoAttribute;
                 var dtoProperty = propForRelatedDto.Property;
-                var dtoIdProperty = _targetType.GetProperty(attribute.IdPropertyName ?? (dtoProperty.Name + "Id"), BindingFlags.Public | BindingFlags.Instance);
+                var dtoPropertyType = dtoProperty.PropertyType;                
 
-                var rule = new RelatedDtoProperty(attribute, dtoProperty, dtoIdProperty);
+                RelatedValueType dtoType = new RelatedValueType(dtoProperty);
+
+                string idPropertyName = attribute.IdPropertyName;
+
+                var isList = dtoType.GenericType != null || dtoType.IsArray;
+
+                if (idPropertyName == null)
+                {
+                    idPropertyName = (isList ? $"{dtoPropertyType.Name}Ids" : $"{dtoProperty.Name}Id");
+                }
+
+                PropertyInfo idProperty = null;
+
+                if (!string.IsNullOrEmpty(idPropertyName))
+                    idProperty = _targetType.GetProperty(idPropertyName, BindingFlags.Public | BindingFlags.Instance);
+
+                if (idProperty == null && isList)
+                    throw new MissingIdPropertyNameException(targetDtoType.Name, dtoProperty.Name);
+
+                RelatedValueType idType = idProperty == null ? null : new RelatedValueType(idProperty);
+
+                var rule = new RelatedDtoProperty(attribute, dtoType, idType);
                 rules.Add(dtoProperty.Name, rule);
             }
 
