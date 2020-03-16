@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.ObjectMapping;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
@@ -37,84 +39,195 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             var arrTargetDtos = targetDtos.ToArray();
             var arrKeyProviders = keyProviders.ToArray();
 
-            foreach (var relatedDtoProperty in relatedDtoProperties)
+            foreach (var relatedProperty in relatedDtoProperties)
             {
-                var dtoProperty = relatedDtoProperty.DtoProperty;
-                var attribute = relatedDtoProperty.Attribute;
+                var dtoType = relatedProperty.DtoType;
+                var dtoProperty = dtoType.Property;
+                var attribute = relatedProperty.Attribute;
 
-                var idProperty = isKeyProviderSameType
-                    ? relatedDtoProperty.DtoIdProperty
-                    : keyProviderType.GetProperty(attribute.IdPropertyName ?? dtoProperty.Name + "Id", BindingFlags.Public | BindingFlags.Instance);
+                RelatedValueType idType = null;
 
-                if (idProperty == null)
+                if (isKeyProviderSameType)
+                {
+                    idType = relatedProperty.IdType;
+                }
+                else
+                {
+                    if (dtoType.GenericType != null || dtoType.IsArray)
+                        throw new MissingIdPropertyNameException(targetDtoType.Name, dtoProperty.Name);
+
+                    var idProp = keyProviderType.GetProperty(attribute.IdPropertyName ?? dtoProperty.Name + "Id", BindingFlags.Public | BindingFlags.Instance);
+
+                    if (idProp != null)
+                        idType = new RelatedValueType(idProp);
+                }
+
+                if (idType == null)
                 {
                     continue;
                 }
 
-                var loaderRule = _profile.GetRule(dtoProperty.PropertyType);
+                var loaderRule = _profile.GetRule(dtoType.ElementType);
 
                 if (loaderRule == null)
                 {
                     continue;
                 }
 
-                var keyProviderWithIds = arrKeyProviders.ToDictionary(x => x, dto => idProperty.GetValue(dto));
-                var idsToLoad = keyProviderWithIds.Values.Where(x => x != null).ToArray();
-
-                Dictionary<object, object> dictLoadedDtos = null;
-
-                if (idsToLoad.Any())
+                if (dtoType.GenericType != null)
                 {
-                    object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad).ConfigureAwait(false)).ToArray();
-                    dictLoadedDtos = relatedDtos.ToDictionary(x => loaderRule.GetKey(x), x => x);
+                    await InternalLoadDtoEnumerableAsync(relatedProperty, idType, loaderRule, arrTargetDtos, arrKeyProviders);
                 }
-
-                for (var index = 0; index < arrTargetDtos.Length; index++)
+                else if (dtoType.IsArray)
                 {
-                    var targetDto = arrTargetDtos[index];
-                    var keyProvider = arrKeyProviders[index];
-
-                    object propValue = null;
-
-                    var desiredDtoKey = keyProviderWithIds[keyProvider];
-
-                    if (desiredDtoKey != null)
-                    {                                               
-                        propValue = GetDesiredDto(desiredDtoKey, dictLoadedDtos);                        
-                    }
-
-                    dtoProperty.SetValue(targetDto, propValue);
+                    await InternalLoadDtoArrayAsync(relatedProperty, idType, loaderRule, arrTargetDtos, arrKeyProviders);
+                }
+                else
+                {
+                    await InternalLoadDtoAsync(relatedProperty, idType, loaderRule, arrTargetDtos, arrKeyProviders);
                 }
             }
 
             return arrTargetDtos;
         }
 
-        private TDto GetDesiredDto<TDto>(object desiredKey, Dictionary<object, TDto> availableDtos)
-            where TDto : class
+        private async Task InternalLoadDtoAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty relatedProperty, RelatedValueType idType, IDtoLoadRule loaderRule, TTargetDto[] arrTargetDtos, TKeyProvider[] arrKeyProviders)
+            where TTargetDto : class
+            where TKeyProvider : class
         {
-            if (availableDtos.TryGetValue(desiredKey, out var dto))
+            var dtoType = relatedProperty.DtoType;
+
+            var keyProviderWithIds = arrKeyProviders.ToDictionary(x => x, keyProvider => idType.Property.GetValue(keyProvider));
+            var idsToLoad = keyProviderWithIds.Values.Where(x => x != null).ToArray();
+
+            Dictionary<object, object> dictLoadedDtos = null;
+
+            if (idsToLoad.Any())
             {
-                return dto;
+                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad).ConfigureAwait(false)).ToArray();
+                dictLoadedDtos = relatedDtos.ToDictionary(x => loaderRule.GetKey(x), x => x);
             }
 
-            return null;
+            for (var index = 0; index < arrTargetDtos.Length; index++)
+            {
+                var targetDto = arrTargetDtos[index];
+                var keyProvider = arrKeyProviders[index];
+
+                object propValue = null;
+
+                var desiredDtoKey = keyProviderWithIds[keyProvider];
+
+                if (desiredDtoKey != null && dictLoadedDtos.ContainsKey(desiredDtoKey))
+                {
+                    propValue = dictLoadedDtos[desiredDtoKey];
+                }
+
+                dtoType.Property.SetValue(targetDto, propValue);
+            }
         }
 
-        private List<TDto> GetDesiredDtos<TDto>(IEnumerable<object> desiredKeys, Dictionary<object, TDto> availableDtos)
-            where TDto : class
+        private async Task InternalLoadDtoEnumerableAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty relatedProperty, RelatedValueType idType, IDtoLoadRule loaderRule, TTargetDto[] arrTargetDtos, TKeyProvider[] arrKeyProviders)
+            where TTargetDto : class
+            where TKeyProvider : class
         {
-            List<TDto> dtos = new List<TDto>();
+            var dtoType = relatedProperty.DtoType;
 
-            foreach (var desiredKey in desiredKeys)
+            var keyProviderWithIds = arrKeyProviders.ToDictionary(x => x, keyProvider => ((IEnumerable)idType.Property.GetValue(keyProvider)).Cast<object>().ToArray());
+            var idsToLoad = keyProviderWithIds.Values.Where(x => x != null).SelectMany(x => x).Where(x => x != null).Distinct().ToArray();
+
+            Dictionary<object, object> dictLoadedDtos = null;
+
+            var dtoElementType = dtoType.ElementType;
+
+            if (idsToLoad.Any())
             {
-                if (availableDtos.TryGetValue(desiredKey, out var dto))
-                {
-                    dtos.Add(dto);
-                }
-            }
+                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad).ConfigureAwait(false)).ToArray();
+                dictLoadedDtos = relatedDtos.ToDictionary(x => loaderRule.GetKey(x), x => x);
+            }            
 
-            return dtos;
+            for (var index = 0; index < arrTargetDtos.Length; index++)
+            {
+                var targetDto = arrTargetDtos[index];
+                var keyProvider = arrKeyProviders[index];
+
+                object propValue = null;
+
+                var desiredDtoKeys = keyProviderWithIds[keyProvider];
+
+                if (desiredDtoKeys != null)
+                {
+                    var dtoList = Activator.CreateInstance(relatedProperty.DtoListType);
+                    
+                    foreach (var desiredDtoKey in desiredDtoKeys)
+                    {
+                        object dto = null;
+
+                        if (desiredDtoKey != null && dictLoadedDtos.ContainsKey(desiredDtoKey))
+                        {
+                            dto = dictLoadedDtos[desiredDtoKey];
+                        }
+
+                        relatedProperty.Add.Invoke(dtoList, new object[] { dto });
+                    }
+
+                    propValue = dtoList;
+                }
+
+                dtoType.Property.SetValue(targetDto, propValue);
+            }
+        }
+
+        private async Task InternalLoadDtoArrayAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty relatedProperty, RelatedValueType idType, IDtoLoadRule loaderRule, TTargetDto[] arrTargetDtos, TKeyProvider[] arrKeyProviders)
+            where TTargetDto : class
+            where TKeyProvider : class
+        {
+            var dtoType = relatedProperty.DtoType;
+
+            var keyProviderWithIds = arrKeyProviders.ToDictionary(x => x, keyProvider => ((IEnumerable)idType.Property.GetValue(keyProvider)).Cast<object>().ToArray());
+            var idsToLoad = keyProviderWithIds.Values.Where(x => x != null).SelectMany(x => x).Where(x => x != null).Distinct().ToArray();
+
+            Dictionary<object, object> dictLoadedDtos = null;
+
+            var dtoElementType = dtoType.ElementType;
+
+            if (idsToLoad.Any())
+            {
+                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad).ConfigureAwait(false)).ToArray();
+                dictLoadedDtos = relatedDtos.ToDictionary(x => loaderRule.GetKey(x), x => x);
+            }            
+
+            for (var index = 0; index < arrTargetDtos.Length; index++)
+            {
+                var targetDto = arrTargetDtos[index];
+                var keyProvider = arrKeyProviders[index];
+
+                object propValue = null;
+
+                var desiredDtoKeys = keyProviderWithIds[keyProvider];
+
+                if (desiredDtoKeys != null)
+                {
+                    var dtoArray = Array.CreateInstance(dtoType.ElementType, desiredDtoKeys.Length);
+
+                    for (int i = 0; i < desiredDtoKeys.Length; i++)
+                    {
+                        var desiredDtoKey = desiredDtoKeys[i];
+
+                        object dto = null;
+
+                        if (desiredDtoKey != null && dictLoadedDtos.ContainsKey(desiredDtoKey))
+                        {
+                            dto = dictLoadedDtos[desiredDtoKey];
+                        }
+
+                        dtoArray.SetValue(dto, i);
+                    }
+                                          
+                    propValue = dtoArray;
+                }
+
+                dtoType.Property.SetValue(targetDto, propValue);
+            }
         }
     }
 }

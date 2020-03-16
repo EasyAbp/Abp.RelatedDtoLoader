@@ -6,5 +6,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader
     public class RelatedDtoAttribute : Attribute
     {
         public string IdPropertyName = null;
+
+        public RelatedDtoAttribute() { }
+
+        public RelatedDtoAttribute(string idPropertyName)
+        {
+            IdPropertyName = idPropertyName;
+        }
     }
 }
