@@ -3,6 +3,14 @@
     <LangVersion>latest</LangVersion>
     <Version>0.1.0</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>EasyAbp Team</Authors>
+    <Description>An Abp module to help you automatically load related DTO (like ProductDto in OrderDto) under DDD.</Description>
+    <PackageProjectUrl>https://github.com/EasyAbp/Abp.RelatedDtoLoader</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/EasyAbp/Abp.RelatedDtoLoader</RepositoryUrl>
+    <PackageTags>abp module easyabp dto related loader ddd</PackageTags>
+    <Company>EasyAbp</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
