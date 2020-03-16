@@ -104,7 +104,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
             if (idsToLoad.Any())
             {
-                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad).ConfigureAwait(false)).ToArray();
+                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad)).ToArray();
                 dictLoadedDtos = relatedDtos.ToDictionary(x => loaderRule.GetKey(x), x => x);
             }
 
@@ -141,7 +141,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
             if (idsToLoad.Any())
             {
-                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad).ConfigureAwait(false)).ToArray();
+                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad)).ToArray();
                 dictLoadedDtos = relatedDtos.ToDictionary(x => loaderRule.GetKey(x), x => x);
             }            
 
@@ -192,7 +192,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
             if (idsToLoad.Any())
             {
-                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad).ConfigureAwait(false)).ToArray();
+                object[] relatedDtos = (await loaderRule.LoadAsObjectAsync(_serviceProvider, idsToLoad)).ToArray();
                 dictLoadedDtos = relatedDtos.ToDictionary(x => loaderRule.GetKey(x), x => x);
             }            
 

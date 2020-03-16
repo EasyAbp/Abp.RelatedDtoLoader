@@ -23,14 +23,14 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
         public async Task<IEnumerable<TDto>> LoadAsync(IServiceProvider serviceProvider, IEnumerable<TKey> ids)
         {
-            return await Rule(serviceProvider, ids).ConfigureAwait(false);
+            return await Rule(serviceProvider, ids);
         }
 
         public async Task<IEnumerable<object>> LoadAsObjectAsync(IServiceProvider serviceProvider, IEnumerable<object> ids)
         {
             var convertedIds = ids.Select(x => (TKey)x);
             
-            return (await Rule(serviceProvider, convertedIds).ConfigureAwait(false)).AsEnumerable<object>().ToArray();
+            return (await Rule(serviceProvider, convertedIds)).AsEnumerable<object>().ToArray();
         }
 
         public object GetKey(object dto)

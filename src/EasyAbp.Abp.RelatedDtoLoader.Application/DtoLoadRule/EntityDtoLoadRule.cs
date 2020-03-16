@@ -29,7 +29,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
                 foreach (var id in ids)
                 {
-                    relatedDtos.Add(id == null ? null : await repository.GetAsync(id).ConfigureAwait(false));
+                    relatedDtos.Add(id == null ? null : await repository.GetAsync(id));
                 }
 
                 return objectMapper.Map<IEnumerable<TEntity>, TDto[]>(relatedDtos);
