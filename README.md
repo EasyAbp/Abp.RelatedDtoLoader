@@ -1,6 +1,6 @@
 # RelatedDtoLoader
 
-An Abp module to help you automatically load related DTO (like ProductDto in OrderDto) under DDD.
+An Abp module that help you automatically load related DTO (like ProductDto in OrderDto) under DDD.
 
 ## Getting Started
 
