@@ -5,6 +5,6 @@ $rootFolder = Join-Path $packFolder "../"
 # List of projects
 $projects = (
 
-    "src/EasyAbp.Abp.RelatedDtoLoader.Application",
-    "src/EasyAbp.Abp.RelatedDtoLoader.Application.Contracts"
+    "src/EasyAbp.Abp.RelatedDtoLoader",
+    "src/EasyAbp.Abp.RelatedDtoLoader.Abstractions"
 )
