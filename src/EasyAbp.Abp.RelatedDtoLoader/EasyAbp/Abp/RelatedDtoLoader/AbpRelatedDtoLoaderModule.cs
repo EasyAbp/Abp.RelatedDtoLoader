@@ -3,18 +3,12 @@ using EasyAbp.Abp.RelatedDtoLoader.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
-using Volo.Abp.Application;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
-    [DependsOn(
-        typeof(AbpRelatedDtoLoaderApplicationContractsModule),
-        typeof(AbpDddApplicationModule),
-        typeof(AbpAutoMapperModule)
-    )]
-    public class AbpRelatedDtoLoaderApplicationModule : AbpModule
+    [DependsOn(typeof(AbpRelatedDtoLoaderAbstractionsModule))]
+    public class AbpRelatedDtoLoaderModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
@@ -29,7 +23,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
         {
             var options = serviceProvider.GetRequiredService<IOptions<RelatedDtoLoaderOptions>>().Value;
 
-            var mapperConfiguration = new DtoLoaderConfiguration(configurationExpression =>
+            var configuration = new DtoLoaderConfiguration(configurationExpression =>
             {
                 var context = new RelatedDtoLoaderConfigurationContext(configurationExpression, serviceProvider);
 
@@ -39,7 +33,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                 }
             });
 
-            return mapperConfiguration;
+            return configuration;
         }
     }
 }

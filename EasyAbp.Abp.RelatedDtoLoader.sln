@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.Abp.RelatedDtoLoader.Application.Contracts", "src\EasyAbp.Abp.RelatedDtoLoader.Application.Contracts\EasyAbp.Abp.RelatedDtoLoader.Application.Contracts.csproj", "{BD65D04F-08D5-40C1-8C24-77CA0BACB877}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.Abp.RelatedDtoLoader.Abstractions", "src\EasyAbp.Abp.RelatedDtoLoader.Abstractions\EasyAbp.Abp.RelatedDtoLoader.Abstractions.csproj", "{BD65D04F-08D5-40C1-8C24-77CA0BACB877}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.Abp.RelatedDtoLoader.Application", "src\EasyAbp.Abp.RelatedDtoLoader.Application\EasyAbp.Abp.RelatedDtoLoader.Application.csproj", "{78040F9E-3501-4A40-82DF-00A597710F35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.Abp.RelatedDtoLoader", "src\EasyAbp.Abp.RelatedDtoLoader\EasyAbp.Abp.RelatedDtoLoader.csproj", "{78040F9E-3501-4A40-82DF-00A597710F35}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{649A3FFA-182F-4E56-9717-E6A9A2BEC545}"
 EndProject

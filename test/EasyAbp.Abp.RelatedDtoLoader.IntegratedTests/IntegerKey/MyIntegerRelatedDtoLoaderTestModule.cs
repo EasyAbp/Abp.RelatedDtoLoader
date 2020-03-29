@@ -14,7 +14,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
         typeof(AbpTestBaseModule),
         typeof(MyIntegerEntityFrameworkCoreTestModule),
         typeof(AbpAutoMapperModule),
-        typeof(AbpRelatedDtoLoaderApplicationModule)
+        typeof(AbpRelatedDtoLoaderModule)
     )]
     public class MyIntegerRelatedDtoLoaderTestModule : AbpModule
     {

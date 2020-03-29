@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\EasyAbp.Abp.RelatedDtoLoader.Application.Contracts\EasyAbp.Abp.RelatedDtoLoader.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\src\EasyAbp.Abp.RelatedDtoLoader.Application\EasyAbp.Abp.RelatedDtoLoader.Application.csproj" />
+    <ProjectReference Include="..\..\src\EasyAbp.Abp.RelatedDtoLoader.Abstractions\EasyAbp.Abp.RelatedDtoLoader.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\EasyAbp.Abp.RelatedDtoLoader\EasyAbp.Abp.RelatedDtoLoader.csproj" />
   </ItemGroup>
 
 </Project>

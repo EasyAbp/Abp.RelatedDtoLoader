@@ -15,7 +15,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
         typeof(AbpTestBaseModule),
         typeof(MyGuidEntityFrameworkCoreTestModule),
         typeof(AbpAutoMapperModule),
-        typeof(AbpRelatedDtoLoaderApplicationModule)
+        typeof(AbpRelatedDtoLoaderModule)
     )]
     public class MyGuidRelatedDtoLoaderTestModule : AbpModule
     {
