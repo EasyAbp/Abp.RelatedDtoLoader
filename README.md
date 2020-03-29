@@ -18,7 +18,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 1. Make your `Order` **entity** (or aggregate root) like this.
 
-    ```
+    ```csharp
         public class Order : AggregateRoot<Guid>
         {
             public virtual Guid ProductId { get; protected set; }
@@ -37,7 +37,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 1. Add `RelatedDto` attribute in `OrderDto`.
 
-    ```
+    ```csharp
         public class OrderDto : EntityDto<Guid>
         {
             public Guid ProductId { get; set; }
@@ -49,7 +49,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 1. Create `MyProjectRelatedDtoLoaderProfile` and add a rule.
 
-    ```
+    ```csharp
         public class MyProjectRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
         {
             public MyRelatedDtoLoaderProfile()
@@ -74,7 +74,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 1. Configure the RelatedDtoLoader to use the profile
 
-    ```
+    ```csharp
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             // ...
@@ -96,7 +96,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 1. Try to get OrderDto with ProductDto.
 
-    ```
+    ```csharp
         public class OrderAppService : ApplicationService, IOrderAppService
         {
             private readonly IRelatedDtoLoader _relatedDtoLoader;
@@ -126,9 +126,9 @@ See more: [Custom DTO source examples](doc/CustomDtoSource.md).
 ## Roadmap
 
 - [x] Custom DTO source
-- [ ] Support one-to-many relation
+- [x] Support one-to-many relation
 - [x] Support non Guid keys
-- [ ] Support multi module development
+- [x] Support multi module development
 - [ ] Support nested DTOs loading
 - [ ] Get duplicate DTO from memory
 - [ ] An option to enable loading deleted DTO
