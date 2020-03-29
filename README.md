@@ -10,9 +10,9 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 * Install Manually
 
-    1. Install `EasyAbp.Abp.RelatedDtoLoader.Application` NuGet package to `MyProject.Application` project and add `[DependsOn(AbpRelatedDtoLoaderApplicationModule)]` attribute to the module.
-
-    1. Install `EasyAbp.Abp.RelatedDtoLoader.Application.Contracts` NuGet package to `MyProject.Application.Contracts` project and add `[DependsOn(AbpRelatedDtoLoaderApplicationContractsModule)]` attribute to the module.
+    1. Install `EasyAbp.Abp.RelatedDtoLoader.Abstractions` NuGet package to `MyProject.Application.Contracts` project and add `[DependsOn(AbpRelatedDtoLoaderAbstractionsModule)]` attribute to the module.
+    
+    1. Install `EasyAbp.Abp.RelatedDtoLoader` NuGet package to `MyProject.Application` project (or any other project you want) and add `[DependsOn(AbpRelatedDtoLoaderModule)]` attribute to the module.
 
 ## Usage
 
@@ -23,7 +23,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
         {
             public virtual Guid ProductId { get; protected set; }
             
-            // Do not add navigation properties to other aggregate roots!
+            // do not add navigation properties to other aggregate roots!
             // public virtual Product Product { get; set; }
     
             protected Order() { }
@@ -54,19 +54,13 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
         {
             public MyRelatedDtoLoaderProfile()
             {                
-                // register loader
-
-                // the following example gets entities from repository and map them to DTOs.
-                
-                UseRepositoryLoader<ProductDto, Product>();  // For Guid (by default) primary key.
-                UseRepositoryLoader<CityDto, City, int>();   // For int primary key.
+                // the following example gets entities from a repository and maps them to DTOs.
+                UseRepositoryLoader<ProductDto, Product>();
                 
                 // or load it by a customized function.
-                
                 UseLoader(GetOrderDtosAsync);
 
                 // a target type need to be enabled to load its related Dtos properties.
-
                 // EnableTargetDto<OrderDto>();
             }
         }
@@ -82,11 +76,10 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
             Configure<RelatedDtoLoaderOptions>(options =>
             {
                 // add the Profile
-
                 options.AddProfile<MyProjectRelatedDtoLoaderProfile>();
 
-                // adding module will auto add all the profiles in its aseembly, and auto enable the target dto types that contain any property with RelatedDto attribute.
-
+                // adding module will auto add all the profiles in its assembly,
+                // and auto enable the target dto types that contain any property with RelatedDto attribute.
                 options.AddModule<MyApplicationContractsModule>();
             });
 
@@ -102,9 +95,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
             private readonly IRelatedDtoLoader _relatedDtoLoader;
             private readonly IRepository<Order, Guid> _orderRepository;
             
-            public OrderAppService(
-                IRelatedDtoLoader relatedDtoLoader,
-                IRepository<Order, Guid> orderRepository)
+            public OrderAppService(IRelatedDtoLoader relatedDtoLoader, IRepository<Order, Guid> orderRepository)
             {
                 _relatedDtoLoader = relatedDtoLoader;
                 _orderRepository = orderRepository;
