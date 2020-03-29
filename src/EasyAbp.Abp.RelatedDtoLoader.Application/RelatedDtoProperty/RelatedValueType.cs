@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Reflection;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoProperty
 {
     public class RelatedValueType
     {

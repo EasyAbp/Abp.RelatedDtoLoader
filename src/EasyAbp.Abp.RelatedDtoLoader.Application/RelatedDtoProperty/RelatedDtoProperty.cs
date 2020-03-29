@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoProperty
 {
     public class RelatedDtoProperty
     {

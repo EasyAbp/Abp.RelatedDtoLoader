@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Domain.Entities;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests
+namespace EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain.IntegerKey
 {
     public class IntProduct : Entity<int>
     {

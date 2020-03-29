@@ -1,6 +1,8 @@
-﻿namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+﻿using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain.IntegerKey;
+
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
 {
-    public class MyIntegerRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
+    public class MyIntegerRelatedDtoLoaderProfile : RelatedDtoLoaderProfile.RelatedDtoLoaderProfile
     {
         public MyIntegerRelatedDtoLoaderProfile()
         {

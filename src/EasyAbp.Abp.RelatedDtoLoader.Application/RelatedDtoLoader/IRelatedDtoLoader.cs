@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoader
 {
     public interface IRelatedDtoLoader
     {

@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
 {
     public class MyGuidDbContext : AbpDbContext<MyGuidDbContext>, IEfCoreDbContext
     {

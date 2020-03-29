@@ -1,7 +1,7 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests
+namespace EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain
 {
     public class Product : Entity<Guid>
     {

@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EasyAbp.Abp.RelatedDtoLoader.Tests;
+using EasyAbp.Abp.RelatedDtoLoader.Configurations;
+using EasyAbp.Abp.RelatedDtoLoader.DtoLoadRule;
+using EasyAbp.Abp.RelatedDtoLoader.Exceptions;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoader;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoaderProfile;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoProperty;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain;
 using Moq;
 using Shouldly;
 using Xunit;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
+namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests.Loader
 {
     public class RelatedDtoLoader_Test
     {
         private readonly MyUnitTestData _testData = new MyUnitTestData();
 
-        private static RelatedDtoLoader GetRelatedDtoLoader(MyUnitTestData testData)
+        private static RelatedDtoLoader.RelatedDtoLoader GetRelatedDtoLoader(MyUnitTestData testData)
         {
             var fakeConfig = new Mock<IDtoLoaderConfigurationProvider>();
 
@@ -26,7 +32,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             fakeConfig.Setup(x => x.GetRelatedDtoProperties(typeof(OrderDto)))
                 .Returns(orderRelatedDtoProperties);
 
-            var dtoLoader = new RelatedDtoLoader(null, fakeConfig.Object);
+            var dtoLoader = new RelatedDtoLoader.RelatedDtoLoader(null, fakeConfig.Object);
 
             return dtoLoader;
         }

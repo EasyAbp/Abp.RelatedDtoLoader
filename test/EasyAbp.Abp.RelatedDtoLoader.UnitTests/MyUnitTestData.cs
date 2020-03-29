@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using EasyAbp.Abp.RelatedDtoLoader.Tests;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain;
 
 namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
 {

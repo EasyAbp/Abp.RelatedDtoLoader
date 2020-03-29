@@ -1,11 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EasyAbp.Abp.RelatedDtoLoader.Configurations;
+using EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
 {
     [DependsOn(
         typeof(AbpAutofacModule),

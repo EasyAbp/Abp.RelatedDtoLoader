@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoader;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Modularity;
@@ -7,7 +8,7 @@ using Volo.Abp.ObjectMapping;
 using Volo.Abp.Testing;
 using Volo.Abp.Uow;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests
 {
     public abstract class RelatedDtoLoaderTestBase<TTestModule> : AbpIntegratedTest<TTestModule>
         where TTestModule : AbpModule

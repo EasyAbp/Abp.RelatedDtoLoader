@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.Exceptions
 {
     public class MissingIdPropertyNameException : Exception
     {

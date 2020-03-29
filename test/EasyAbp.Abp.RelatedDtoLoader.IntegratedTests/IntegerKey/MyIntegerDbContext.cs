@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain.IntegerKey;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
 {
     public class MyIntegerDbContext : AbpDbContext<MyIntegerDbContext>, IEfCoreDbContext
     {

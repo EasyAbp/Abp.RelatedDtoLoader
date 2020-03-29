@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoaderProfile;
 using Volo.Abp.Application.Dtos;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
 {
     public class DtoLoaderConfigurationExpression
     {
@@ -60,7 +61,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             AddProfile(dynamicLoaderProfile);
         }
 
-        private class NamedProfile : RelatedDtoLoaderProfile
+        private class NamedProfile : RelatedDtoLoaderProfile.RelatedDtoLoaderProfile
         {
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
 {
     public interface IRelatedDtoLoaderConfigurationContext
     {

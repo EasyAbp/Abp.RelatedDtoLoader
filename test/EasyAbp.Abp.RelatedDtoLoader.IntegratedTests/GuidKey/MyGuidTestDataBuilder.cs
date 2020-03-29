@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Threading;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
 {
     public class MyGuidTestDataBuilder : ITransientDependency
     {

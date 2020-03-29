@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests
+namespace EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain
 {
     public class ProductDto : EntityDto<Guid>
     {

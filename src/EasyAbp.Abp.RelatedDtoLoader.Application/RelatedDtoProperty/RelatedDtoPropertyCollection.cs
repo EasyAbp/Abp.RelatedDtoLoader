@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EasyAbp.Abp.RelatedDtoLoader.Exceptions;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoProperty
 {
     public class RelatedDtoPropertyCollection : IEnumerable<RelatedDtoProperty>
     {

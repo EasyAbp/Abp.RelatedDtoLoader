@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
 {
     public class MyGuidTestAutoMapperProfile : Profile
     {

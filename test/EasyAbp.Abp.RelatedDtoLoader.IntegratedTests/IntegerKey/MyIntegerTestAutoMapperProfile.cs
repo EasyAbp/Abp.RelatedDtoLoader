@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain.IntegerKey;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
 {
     public class MyIntegerTestAutoMapperProfile : Profile
     {

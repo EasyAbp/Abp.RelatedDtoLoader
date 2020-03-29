@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoader;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain.IntegerKey;
 using Shouldly;
 using Volo.Abp.Domain.Repositories;
 using Xunit;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey.Tests
 {
     public class RelatedDtoLoader_Basic_Test_Integer : RelatedDtoLoaderTestBase<MyIntegerRelatedDtoLoaderTestModule>
     {

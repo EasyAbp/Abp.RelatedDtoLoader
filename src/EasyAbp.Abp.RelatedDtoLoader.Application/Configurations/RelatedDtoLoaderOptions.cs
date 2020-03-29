@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoaderProfile;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
 {
     public class RelatedDtoLoaderOptions
     {

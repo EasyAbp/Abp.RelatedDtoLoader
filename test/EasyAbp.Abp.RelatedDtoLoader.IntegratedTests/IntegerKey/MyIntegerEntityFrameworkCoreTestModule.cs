@@ -7,7 +7,7 @@ using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
 {
     [DependsOn(
         typeof(AbpEntityFrameworkCoreModule)

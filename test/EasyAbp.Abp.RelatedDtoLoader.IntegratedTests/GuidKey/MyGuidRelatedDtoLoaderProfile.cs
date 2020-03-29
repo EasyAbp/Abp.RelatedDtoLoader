@@ -1,6 +1,8 @@
-﻿namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+﻿using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain;
+
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
 {
-    public class MyGuidRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
+    public class MyGuidRelatedDtoLoaderProfile : RelatedDtoLoaderProfile.RelatedDtoLoaderProfile
     {
         public MyGuidRelatedDtoLoaderProfile()
         {

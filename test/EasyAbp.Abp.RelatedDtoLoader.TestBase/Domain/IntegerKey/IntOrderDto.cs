@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Application.Dtos;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests
+namespace EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain.IntegerKey
 {
     public class IntOrderDto : EntityDto<int>
     {

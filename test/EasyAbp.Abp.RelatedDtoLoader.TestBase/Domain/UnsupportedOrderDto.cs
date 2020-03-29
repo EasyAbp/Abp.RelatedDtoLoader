@@ -1,7 +1,7 @@
 ﻿using System;
 using Volo.Abp.Application.Dtos;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests
+namespace EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain
 {
     public class UnsupportedOrderDto : EntityDto<Guid>
     {

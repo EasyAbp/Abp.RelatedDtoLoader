@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyAbp.Abp.RelatedDtoLoader.DtoLoadRule;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoProperty;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.ObjectMapping;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoaderProfile
 {
     public abstract class RelatedDtoLoaderProfile : IRelatedDtoLoaderProfile
     {

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using EasyAbp.Abp.RelatedDtoLoader.DtoLoadRule;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoaderProfile;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoProperty;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
 {
     public class DtoLoaderConfiguration : IDtoLoaderConfigurationProvider
     {

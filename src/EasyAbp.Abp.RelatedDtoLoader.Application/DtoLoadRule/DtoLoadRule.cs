@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.DtoLoadRule
 {
     public class DtoLoadRule<TDto, TKey> : IDtoLoadRule
         where TDto : class, IEntityDto<TKey>

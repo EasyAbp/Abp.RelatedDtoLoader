@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain.IntegerKey;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Threading;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
 {
     public class MyIntegerTestDataBuilder : ITransientDependency
     {

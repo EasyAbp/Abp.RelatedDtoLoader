@@ -4,9 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using EasyAbp.Abp.RelatedDtoLoader.Configurations;
+using EasyAbp.Abp.RelatedDtoLoader.DtoLoadRule;
+using EasyAbp.Abp.RelatedDtoLoader.Exceptions;
+using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoProperty;
 using Volo.Abp.DependencyInjection;
 
-namespace EasyAbp.Abp.RelatedDtoLoader
+namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoader
 {
     public class RelatedDtoLoader : IRelatedDtoLoader, ITransientDependency
     {
@@ -97,7 +101,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             return arrTargetDtos;
         }
 
-        private async Task InternalLoadDtoAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty relatedProperty,
+        private async Task InternalLoadDtoAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty.RelatedDtoProperty relatedProperty,
             RelatedValueType idType, IDtoLoadRule loaderRule, TTargetDto[] arrTargetDtos,
             TKeyProvider[] arrKeyProviders)
             where TTargetDto : class
@@ -135,7 +139,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             }
         }
 
-        private async Task InternalLoadDtoEnumerableAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty relatedProperty,
+        private async Task InternalLoadDtoEnumerableAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty.RelatedDtoProperty relatedProperty,
             RelatedValueType idType, IDtoLoadRule loaderRule, TTargetDto[] arrTargetDtos,
             TKeyProvider[] arrKeyProviders)
             where TTargetDto : class
@@ -191,7 +195,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             }
         }
 
-        private async Task InternalLoadDtoArrayAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty relatedProperty,
+        private async Task InternalLoadDtoArrayAsync<TTargetDto, TKeyProvider>(RelatedDtoProperty.RelatedDtoProperty relatedProperty,
             RelatedValueType idType, IDtoLoadRule loaderRule, TTargetDto[] arrTargetDtos,
             TKeyProvider[] arrKeyProviders)
             where TTargetDto : class

@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.DependencyInjection;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
 {
     public class MyIntegerTestData : ISingletonDependency
     {

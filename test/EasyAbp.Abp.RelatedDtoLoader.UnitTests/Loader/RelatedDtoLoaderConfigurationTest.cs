@@ -1,8 +1,9 @@
-﻿using EasyAbp.Abp.RelatedDtoLoader.Tests;
+﻿using EasyAbp.Abp.RelatedDtoLoader.Configurations;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Domain;
 using Shouldly;
 using Xunit;
 
-namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
+namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests.Loader
 {
     public class RelatedDtoLoaderConfigurationTest
     {
