@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
-    public interface IDtoLoadRule 
+    public interface IDtoLoadRule
     {
         object GetKey(object dto);
         Task<IEnumerable<object>> LoadAsObjectAsync(IServiceProvider serviceProvider, IEnumerable<object> ids);

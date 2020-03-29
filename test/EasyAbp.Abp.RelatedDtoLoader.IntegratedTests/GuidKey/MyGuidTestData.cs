@@ -7,5 +7,5 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
     {
         public Guid ProductId { get; } = Guid.NewGuid();
         public Guid OrderId { get; } = Guid.NewGuid();
-    }       
+    }
 }

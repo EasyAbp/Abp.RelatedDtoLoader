@@ -10,16 +10,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests
 
         public Guid[] CommentIds { get; set; }
 
-        [RelatedDto(nameof(CommentIds))]
-        public IEnumerable<ProductCommentDto> Comments { get; set; }
+        [RelatedDto(nameof(CommentIds))] public IEnumerable<ProductCommentDto> Comments { get; set; }
 
-        [RelatedDto(nameof(CommentIds))]
-        public List<ProductCommentDto> CommentsList { get; set; }
+        [RelatedDto(nameof(CommentIds))] public List<ProductCommentDto> CommentsList { get; set; }
 
-        [RelatedDto(nameof(CommentIds))]
-        public IReadOnlyList<ProductCommentDto> CommentsReadOnlyList { get; set; }
+        [RelatedDto(nameof(CommentIds))] public IReadOnlyList<ProductCommentDto> CommentsReadOnlyList { get; set; }
 
-        [RelatedDto(nameof(CommentIds))]
-        public ProductCommentDto[] CommentsArray { get; set; }
+        [RelatedDto(nameof(CommentIds))] public ProductCommentDto[] CommentsArray { get; set; }
     }
 }

@@ -6,5 +6,5 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
     {
         public int ProductId { get; } = 123;
         public int OrderId { get; } = 456;
-    }       
+    }
 }

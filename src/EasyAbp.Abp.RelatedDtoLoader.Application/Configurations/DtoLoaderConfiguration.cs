@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
-using Volo.Abp.Domain.Entities;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
     public class DtoLoaderConfiguration : IDtoLoaderConfigurationProvider
     {
-        private Dictionary<Type, IDtoLoadRule> _dtoLoaderRules = new Dictionary<Type, IDtoLoadRule>();
+        private readonly Dictionary<Type, IDtoLoadRule> _dtoLoaderRules = new Dictionary<Type, IDtoLoadRule>();
 
-        private readonly ConcurrentDictionary<Type, RelatedDtoPropertyCollection> _targetDtoPropertyCollections = new ConcurrentDictionary<Type, RelatedDtoPropertyCollection>();
+        private readonly IEnumerable<IRelatedDtoLoaderProfile> _profiles;
 
-        private IEnumerable<IRelatedDtoLoaderProfile> _profiles;
+        private readonly ConcurrentDictionary<Type, RelatedDtoPropertyCollection> _targetDtoPropertyCollections =
+            new ConcurrentDictionary<Type, RelatedDtoPropertyCollection>();
 
         public DtoLoaderConfiguration(DtoLoaderConfigurationExpression configurationExpression)
         {
@@ -27,6 +23,18 @@ namespace EasyAbp.Abp.RelatedDtoLoader
         public DtoLoaderConfiguration(Action<DtoLoaderConfigurationExpression> configure)
             : this(Build(configure))
         {
+        }
+
+        public RelatedDtoPropertyCollection GetRelatedDtoProperties(Type targetDtoType)
+        {
+            return _targetDtoPropertyCollections.ContainsKey(targetDtoType)
+                ? _targetDtoPropertyCollections[targetDtoType]
+                : null;
+        }
+
+        public IDtoLoadRule GetLoadRule(Type type)
+        {
+            return _dtoLoaderRules.ContainsKey(type) ? _dtoLoaderRules[type] : null;
         }
 
         private static DtoLoaderConfigurationExpression Build(Action<DtoLoaderConfigurationExpression> configure)
@@ -44,24 +52,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                 {
                     _dtoLoaderRules[dtoLoaderRule.Key] = dtoLoaderRule.Value;
                 }
-                
+
                 foreach (var relatedDtoProps in profile.TargetDtoPropertyCollections)
                 {
                     _targetDtoPropertyCollections[relatedDtoProps.Key] = relatedDtoProps.Value;
                 }
             }
-        }
-
-        public RelatedDtoPropertyCollection GetRelatedDtoProperties(Type targetDtoType)
-        {
-            return _targetDtoPropertyCollections.ContainsKey(targetDtoType)
-                ? _targetDtoPropertyCollections[targetDtoType]
-                : null;
-        }
-
-        public IDtoLoadRule GetLoadRule(Type type)
-        {
-            return _dtoLoaderRules.ContainsKey(type) ? _dtoLoaderRules[type] : null;
         }
     }
 }

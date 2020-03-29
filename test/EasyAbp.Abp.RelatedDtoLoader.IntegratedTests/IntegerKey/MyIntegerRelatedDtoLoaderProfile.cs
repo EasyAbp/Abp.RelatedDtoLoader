@@ -1,14 +1,10 @@
-﻿using EasyAbp.Abp.RelatedDtoLoader.Tests;
-using System;
-
-namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
+﻿namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
 {
     public class MyIntegerRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
     {
-        public MyIntegerRelatedDtoLoaderProfile() 
-            : base()
+        public MyIntegerRelatedDtoLoaderProfile()
         {
-            UseRepositoryLoader<IntProductDto, IntProduct, int>();            
+            UseRepositoryLoader<IntProductDto, IntProduct, int>();
 
             EnableTargetDto<IntOrderDto>();
         }

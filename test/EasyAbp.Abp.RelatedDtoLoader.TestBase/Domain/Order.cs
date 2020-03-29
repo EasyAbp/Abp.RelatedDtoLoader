@@ -5,14 +5,16 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests
 {
     public class Order : Entity<Guid>
     {
-        public virtual Guid ProductId { get; protected set; }
-
-        protected Order() { }
+        protected Order()
+        {
+        }
 
         public Order(Guid id, Guid productId)
             : base(id)
         {
             ProductId = productId;
         }
+
+        public virtual Guid ProductId { get; protected set; }
     }
 }

@@ -1,25 +1,17 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
-using Volo.Abp.Domain.Entities;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
-    public class DtoLoaderConfigurationExpression 
+    public class DtoLoaderConfigurationExpression
     {
         private static readonly Type EntityDtoType = typeof(IEntityDto);
         private static readonly Type ProfileType = typeof(IRelatedDtoLoaderProfile);
 
         private readonly IList<IRelatedDtoLoaderProfile> _profiles = new List<IRelatedDtoLoaderProfile>();
-
-        public DtoLoaderConfigurationExpression()
-        {
-        }
 
         public bool AutoUseRepositoryLoader { get; set; }
 
@@ -31,11 +23,14 @@ namespace EasyAbp.Abp.RelatedDtoLoader
         }
 
         public void AddAssemblies(RelatedDtoLoaderAssemblyOptions options, params Assembly[] assembliesToScan)
-            => AddAssembliesCore(options, assembliesToScan);
+        {
+            AddAssembliesCore(options, assembliesToScan);
+        }
 
         private void AddAssembliesCore(RelatedDtoLoaderAssemblyOptions options, IEnumerable<Assembly> assembliesToScan)
         {
-            var allTypes = assembliesToScan.Where(a => !a.IsDynamic && a != typeof(NamedProfile).Assembly).SelectMany(a => a.DefinedTypes)
+            var allTypes = assembliesToScan.Where(a => !a.IsDynamic && a != typeof(NamedProfile).Assembly)
+                .SelectMany(a => a.DefinedTypes)
                 .Where(x => !x.IsAbstract)
                 .ToArray();
 
@@ -43,7 +38,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
             foreach (var type in profileTypes)
             {
-                var profile = (IRelatedDtoLoaderProfile)Activator.CreateInstance(type);
+                var profile = (IRelatedDtoLoaderProfile) Activator.CreateInstance(type);
                 AddProfile(profile);
             }
 
@@ -56,7 +51,9 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                 foreach (var type in dtoTypes)
                 {
                     if (EntityDtoType.IsAssignableFrom(type))
+                    {
                         dynamicLoaderProfile.EnableTargetDto(type);
+                    }
                 }
             }
 
@@ -65,7 +62,6 @@ namespace EasyAbp.Abp.RelatedDtoLoader
 
         private class NamedProfile : RelatedDtoLoaderProfile
         {
-           
         }
     }
 }

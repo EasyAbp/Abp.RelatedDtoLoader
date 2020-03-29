@@ -1,9 +1,7 @@
-﻿using EasyAbp.Abp.RelatedDtoLoader.Tests;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
-using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Modularity;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.Testing;
@@ -12,9 +10,8 @@ using Volo.Abp.Uow;
 namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
 {
     public abstract class RelatedDtoLoaderTestBase<TTestModule> : AbpIntegratedTest<TTestModule>
-        where TTestModule: AbpModule
+        where TTestModule : AbpModule
     {
-        protected IObjectMapper ObjectMapper { get; }
         protected IRelatedDtoLoader _relatedDtoLoader;
 
         protected RelatedDtoLoaderTestBase()
@@ -22,6 +19,8 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
             ObjectMapper = GetRequiredService<IObjectMapper>();
             _relatedDtoLoader = GetRequiredService<IRelatedDtoLoader>();
         }
+
+        protected IObjectMapper ObjectMapper { get; }
 
         protected override void SetAbpApplicationCreationOptions(AbpApplicationCreationOptions options)
         {
@@ -53,7 +52,8 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
             return WithUnitOfWorkAsync(new AbpUnitOfWorkOptions(), func);
         }
 
-        protected virtual async Task<TResult> WithUnitOfWorkAsync<TResult>(AbpUnitOfWorkOptions options, Func<Task<TResult>> func)
+        protected virtual async Task<TResult> WithUnitOfWorkAsync<TResult>(AbpUnitOfWorkOptions options,
+            Func<Task<TResult>> func)
         {
             using (var scope = ServiceProvider.CreateScope())
             {

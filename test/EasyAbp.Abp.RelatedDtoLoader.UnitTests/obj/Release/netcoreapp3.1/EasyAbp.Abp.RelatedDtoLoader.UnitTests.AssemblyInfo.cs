@@ -12,11 +12,11 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("EasyAbp.Abp.RelatedDtoLoader.UnitTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.1")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("EasyAbp.Abp.RelatedDtoLoader.UnitTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EasyAbp.Abp.RelatedDtoLoader.UnitTests")]
-[assembly: System.Reflection.AssemblyVersionAttribute("0.1.1")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // 由 MSBuild WriteCodeFragment 类生成。
 

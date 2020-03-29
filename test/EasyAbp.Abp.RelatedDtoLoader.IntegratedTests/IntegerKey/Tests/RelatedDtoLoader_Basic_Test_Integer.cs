@@ -1,7 +1,6 @@
-﻿using EasyAbp.Abp.RelatedDtoLoader.Tests;
-using Shouldly;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Shouldly;
 using Volo.Abp.Domain.Repositories;
 using Xunit;
 
@@ -9,10 +8,6 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
 {
     public class RelatedDtoLoader_Basic_Test_Integer : RelatedDtoLoaderTestBase<MyIntegerRelatedDtoLoaderTestModule>
     {
-        protected MyIntegerTestData TestData { get; }
-        protected IRepository<IntProduct> _productRepository;
-        protected IRepository<IntOrder> _orderRepository;
-
         public RelatedDtoLoader_Basic_Test_Integer()
         {
             TestData = GetRequiredService<MyIntegerTestData>();
@@ -21,6 +16,10 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
             _orderRepository = GetRequiredService<IRepository<IntOrder>>();
         }
 
+        protected MyIntegerTestData TestData { get; }
+        protected IRepository<IntProduct> _productRepository;
+        protected IRepository<IntOrder> _orderRepository;
+
         [Fact]
         public async Task Should_Load_Related_ProductDto()
         {
@@ -28,7 +27,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
             {
                 var order = _orderRepository.FirstOrDefault();
 
-                IntOrderDto orderDto = ObjectMapper.Map<IntOrder, IntOrderDto>(order);
+                var orderDto = ObjectMapper.Map<IntOrder, IntOrderDto>(order);
 
                 await _relatedDtoLoader.LoadAsync(orderDto);
 

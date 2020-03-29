@@ -18,10 +18,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAbpDbContext<MyIntegerDbContext>(options =>
-            {
-                options.AddDefaultRepositories(true);                
-            });
+            context.Services.AddAbpDbContext<MyIntegerDbContext>(options => { options.AddDefaultRepositories(true); });
 
             _sqliteConnection = CreateDatabaseAndGetConnection();
 

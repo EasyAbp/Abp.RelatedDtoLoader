@@ -13,15 +13,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
         typeof(MyIntegerEntityFrameworkCoreTestModule),
         typeof(AbpAutoMapperModule),
         typeof(AbpRelatedDtoLoaderApplicationModule)
-        )]
+    )]
     public class MyIntegerRelatedDtoLoaderTestModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddProfile<MyIntegerTestAutoMapperProfile>();
-            });
+            Configure<AbpAutoMapperOptions>(options => { options.AddProfile<MyIntegerTestAutoMapperProfile>(); });
 
             Configure<RelatedDtoLoaderOptions>(options =>
             {

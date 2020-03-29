@@ -5,14 +5,16 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests
 {
     public class Product : Entity<Guid>
     {
-        public virtual string Name { get; protected set; }
-
-        protected Product() { }
+        protected Product()
+        {
+        }
 
         public Product(Guid id, string name)
             : base(id)
         {
             Name = name;
         }
+
+        public virtual string Name { get; protected set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using EasyAbp.Abp.RelatedDtoLoader.Tests;
 
 namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
 {

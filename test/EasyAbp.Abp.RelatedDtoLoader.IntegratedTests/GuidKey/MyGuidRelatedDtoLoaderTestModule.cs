@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
@@ -14,15 +13,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
         typeof(MyGuidEntityFrameworkCoreTestModule),
         typeof(AbpAutoMapperModule),
         typeof(AbpRelatedDtoLoaderApplicationModule)
-        )]
+    )]
     public class MyGuidRelatedDtoLoaderTestModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddProfile<MyGuidTestAutoMapperProfile>();
-            });
+            Configure<AbpAutoMapperOptions>(options => { options.AddProfile<MyGuidTestAutoMapperProfile>(); });
 
             Configure<RelatedDtoLoaderOptions>(options =>
             {

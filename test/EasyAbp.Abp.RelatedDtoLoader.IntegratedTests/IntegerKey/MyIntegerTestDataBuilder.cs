@@ -1,5 +1,4 @@
-﻿using EasyAbp.Abp.RelatedDtoLoader.Tests;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Threading;
@@ -8,15 +7,15 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
 {
     public class MyIntegerTestDataBuilder : ITransientDependency
     {
-        private readonly MyIntegerTestData _testData;
-        private readonly IRepository<IntProduct> _productRepository;
         private readonly IRepository<IntOrder> _orderRepository;
+        private readonly IRepository<IntProduct> _productRepository;
+        private readonly MyIntegerTestData _testData;
 
         public MyIntegerTestDataBuilder(
             MyIntegerTestData testData,
             IRepository<IntProduct> productRepository,
             IRepository<IntOrder> orderRepository
-            )
+        )
         {
             _testData = testData;
             _productRepository = productRepository;

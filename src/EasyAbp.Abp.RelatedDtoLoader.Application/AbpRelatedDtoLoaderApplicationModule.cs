@@ -1,10 +1,10 @@
-﻿using Volo.Abp.AutoMapper;
-using Volo.Abp.Modularity;
-using Volo.Abp.Application;
-using System;
-using Microsoft.Extensions.Options;
+﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Volo.Abp;
+using Volo.Abp.Application;
+using Volo.Abp.AutoMapper;
+using Volo.Abp.Modularity;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
@@ -12,12 +12,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader
         typeof(AbpRelatedDtoLoaderApplicationContractsModule),
         typeof(AbpDddApplicationModule),
         typeof(AbpAutoMapperModule)
-        )]
+    )]
     public class AbpRelatedDtoLoaderApplicationModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddSingleton<IDtoLoaderConfigurationProvider>(serviceProvider => CreateDtoLoaderConfiguration(serviceProvider));
+            context.Services.AddSingleton<IDtoLoaderConfigurationProvider>(CreateDtoLoaderConfiguration);
         }
 
         public override void OnPreApplicationInitialization(ApplicationInitializationContext context)

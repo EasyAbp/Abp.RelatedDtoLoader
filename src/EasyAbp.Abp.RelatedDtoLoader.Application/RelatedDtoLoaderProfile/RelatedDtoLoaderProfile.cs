@@ -1,37 +1,32 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application.Dtos;
-using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
-using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.ObjectMapping;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
     public abstract class RelatedDtoLoaderProfile : IRelatedDtoLoaderProfile
     {
-        private Dictionary<Type, IDtoLoadRule> _dtoLoaderRules = new Dictionary<Type, IDtoLoadRule>();
+        private readonly Dictionary<Type, IDtoLoadRule> _dtoLoaderRules = new Dictionary<Type, IDtoLoadRule>();
 
-        private readonly Dictionary<Type, RelatedDtoPropertyCollection> _targetDtoPropertyCollection = new Dictionary<Type, RelatedDtoPropertyCollection>();
-
-        public RelatedDtoLoaderProfile()
-        {
-
-        }
+        private readonly Dictionary<Type, RelatedDtoPropertyCollection> _targetDtoPropertyCollection =
+            new Dictionary<Type, RelatedDtoPropertyCollection>();
 
         public IReadOnlyDictionary<Type, IDtoLoadRule> DtoLoaderRules => _dtoLoaderRules;
 
-        public IReadOnlyDictionary<Type, RelatedDtoPropertyCollection> TargetDtoPropertyCollections => _targetDtoPropertyCollection;
+        public IReadOnlyDictionary<Type, RelatedDtoPropertyCollection> TargetDtoPropertyCollections =>
+            _targetDtoPropertyCollection;
 
         public IDtoLoadRule UseRepositoryLoader<TDto, TEntity>()
-             where TDto : class, IEntityDto<Guid>
-             where TEntity : class, IEntity<Guid>
+            where TDto : class, IEntityDto<Guid>
+            where TEntity : class, IEntity<Guid>
         {
-            return this.UseRepositoryLoader<TDto, TEntity, Guid>();
+            return UseRepositoryLoader<TDto, TEntity, Guid>();
         }
 
         public IDtoLoadRule UseRepositoryLoader<TDto, TEntity, TKey>()
@@ -44,7 +39,8 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             return rule;
         }
 
-        public static Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> BuildRepositoryLoader<TDto, TEntity, TKey>()
+        public static Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> BuildRepositoryLoader<TDto,
+            TEntity, TKey>()
             where TEntity : class, IEntity<TKey>
             where TDto : class, IEntityDto<TKey>
         {
@@ -72,7 +68,8 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             return UseLoader<TDto, Guid>(source);
         }
 
-        public IDtoLoadRule UseLoader<TDto, TKey>(Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
+        public IDtoLoadRule UseLoader<TDto, TKey>(
+            Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
             where TDto : class, IEntityDto<TKey>
         {
             var rule = new DtoLoadRule<TDto, TKey>(source);
@@ -92,7 +89,9 @@ namespace EasyAbp.Abp.RelatedDtoLoader
             var props = new RelatedDtoPropertyCollection(targetDtoType);
 
             if (props.Any())
+            {
                 _targetDtoPropertyCollection[targetDtoType] = props;
+            }
         }
     }
 }

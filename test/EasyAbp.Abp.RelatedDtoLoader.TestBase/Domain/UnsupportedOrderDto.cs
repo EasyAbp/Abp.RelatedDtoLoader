@@ -8,14 +8,14 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests
         public Guid ProductId { get; set; }
 
         public ProductDto Product { get; set; }
-        
+
         public Guid? OptionalProductId { get; set; }
 
         public ProductDto OptionalProduct { get; set; }
 
         public UnsupportedOrderDto Clone()
         {
-            return (UnsupportedOrderDto)this.MemberwiseClone();
+            return (UnsupportedOrderDto) MemberwiseClone();
         }
     }
 }
