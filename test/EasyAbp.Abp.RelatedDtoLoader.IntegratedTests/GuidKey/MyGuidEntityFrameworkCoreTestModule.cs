@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using EasyAbp.Abp.RelatedDtoLoader.TestBase;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -10,7 +11,8 @@ using Volo.Abp.Modularity;
 namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
 {
     [DependsOn(
-        typeof(AbpEntityFrameworkCoreModule)
+        typeof(AbpEntityFrameworkCoreModule),
+        typeof(RelatedDtoLoaderTestBaseModule)
     )]
     public class MyGuidEntityFrameworkCoreTestModule : AbpModule
     {
