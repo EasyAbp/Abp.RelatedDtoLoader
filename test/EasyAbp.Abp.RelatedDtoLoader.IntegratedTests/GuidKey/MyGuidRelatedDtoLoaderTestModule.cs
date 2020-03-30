@@ -1,6 +1,7 @@
 ﻿using EasyAbp.Abp.RelatedDtoLoader.Configurations;
 using EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey;
 using EasyAbp.Abp.RelatedDtoLoader.TestBase;
+using EasyAbp.Abp.RelatedDtoLoader.TestBase.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Autofac;
@@ -30,9 +31,9 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
             });
 
             context.Services
+                .AddTransient<IProductAppService, ProductAppService>()
                 .AddSingleton<MyGuidTestData>()
-                .AddSingleton<MyIntegerTestDataBuilder>()
-                ;
+                .AddSingleton<MyIntegerTestDataBuilder>();
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)

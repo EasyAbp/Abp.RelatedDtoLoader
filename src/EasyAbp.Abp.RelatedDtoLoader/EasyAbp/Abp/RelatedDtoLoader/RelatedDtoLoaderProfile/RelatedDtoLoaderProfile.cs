@@ -6,6 +6,7 @@ using EasyAbp.Abp.RelatedDtoLoader.DtoLoadRule;
 using EasyAbp.Abp.RelatedDtoLoader.RelatedDtoProperty;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.ObjectMapping;
@@ -36,6 +37,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoaderProfile
             where TEntity : class, IEntity<TKey>
         {
             var source = BuildRepositoryLoader<TDto, TEntity, TKey>();
+            
             var rule = UseLoader(source);
 
             return rule;
@@ -46,22 +48,58 @@ namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoaderProfile
             where TEntity : class, IEntity<TKey>
             where TDto : class, IEntityDto<TKey>
         {
-            Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> source = async (serviceProvider, ids) =>
+            return async (serviceProvider, ids) =>
             {
                 var repository = serviceProvider.GetService<IReadOnlyRepository<TEntity, TKey>>();
                 var objectMapper = serviceProvider.GetService<IObjectMapper>();
 
-                var relatedDtos = new List<TEntity>();
+                var relatedEntities = new List<TEntity>();
 
                 foreach (var id in ids)
                 {
-                    relatedDtos.Add(id == null ? null : await repository.GetAsync(id));
+                    relatedEntities.Add(id == null ? null : await repository.GetAsync(id));
                 }
 
-                return objectMapper.Map<IEnumerable<TEntity>, TDto[]>(relatedDtos);
+                return objectMapper.Map<IEnumerable<TEntity>, TDto[]>(relatedEntities);
             };
+        }
+        
+        public IDtoLoadRule UseAppServiceLoader<TDto, TAppService>(Func<TAppService, Guid, Task<TDto>> itemSource)
+            where TDto : class, IEntityDto<Guid>
+            where TAppService : IApplicationService
+        {
+            return UseAppServiceLoader<TDto, TAppService, Guid>(itemSource);
+        }
+        
+        public IDtoLoadRule UseAppServiceLoader<TDto, TAppService, TKey>(Func<TAppService, TKey, Task<TDto>> itemSource)
+            where TDto : class, IEntityDto<TKey>
+            where TAppService : IApplicationService
+        {
+            var source = BuildAppServiceLoader(itemSource);
 
-            return source;
+            var rule = UseLoader(source);
+
+            return rule;
+        }
+        
+        public static Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> BuildAppServiceLoader<TDto,
+            TAppService, TKey>(Func<TAppService, TKey, Task<TDto>> itemSource)
+            where TAppService : IApplicationService
+            where TDto : class, IEntityDto<TKey>
+        {
+            return async (serviceProvider, ids) =>
+            {
+                var appService = serviceProvider.GetService<TAppService>();
+
+                var relatedDtos = new List<TDto>();
+
+                foreach (var id in ids)
+                {
+                    relatedDtos.Add(id == null ? null : await itemSource(appService, id));
+                }
+
+                return relatedDtos;
+            };
         }
 
         public IDtoLoadRule UseLoader<TDto>(Func<IServiceProvider, IEnumerable<Guid>, Task<IEnumerable<TDto>>> source)
