@@ -8,7 +8,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
         {
             UseRepositoryLoader<IntProductDto, IntProduct, int>();
 
-            EnableTargetDto<IntOrderDto>();
+            RegisterTargetDto<IntOrderDto>();
         }
     }
 }

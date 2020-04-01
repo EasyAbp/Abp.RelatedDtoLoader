@@ -13,15 +13,13 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
 
         public List<Action<IRelatedDtoLoaderConfigurationContext>> Configurators { get; }
 
-        public RelatedDtoLoaderAssemblyOptions AddModule<TModule>(RelatedDtoLoaderAssemblyOptions options = null)
+        public RelatedDtoLoaderAssemblyOptions RegisterTargetDtosInModule<TModule>()
         {
             var assembly = typeof(TModule).Assembly;
 
-            options ??= new RelatedDtoLoaderAssemblyOptions();
+            Configurators.Add(context => { context.ConfigurationExpression.AddAssemblies(null, assembly); });
 
-            Configurators.Add(context => { context.ConfigurationExpression.AddAssemblies(options, assembly); });
-
-            return options;
+            return null;
         }
 
         public void AddProfile<TProfile>()

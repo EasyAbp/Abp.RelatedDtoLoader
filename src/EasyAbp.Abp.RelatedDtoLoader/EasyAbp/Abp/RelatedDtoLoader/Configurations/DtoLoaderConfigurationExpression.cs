@@ -30,6 +30,8 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
 
         private void AddAssembliesCore(RelatedDtoLoaderAssemblyOptions options, IEnumerable<Assembly> assembliesToScan)
         {
+            options = options ?? new RelatedDtoLoaderAssemblyOptions();
+
             var allTypes = assembliesToScan.Where(a => !a.IsDynamic && a != typeof(NamedProfile).Assembly)
                 .SelectMany(a => a.DefinedTypes)
                 .Where(x => !x.IsAbstract)
@@ -53,7 +55,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
                 {
                     if (EntityDtoType.IsAssignableFrom(type))
                     {
-                        dynamicLoaderProfile.EnableTargetDto(type);
+                        dynamicLoaderProfile.RegisterTargetDto(type);
                     }
                 }
             }
