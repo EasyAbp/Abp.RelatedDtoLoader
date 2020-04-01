@@ -27,7 +27,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
             Configure<RelatedDtoLoaderOptions>(options =>
             {
                 options.AddProfile<MyGuidRelatedDtoLoaderProfile>();
-                options.AddModule<RelatedDtoLoaderTestBaseModule>();
+                options.RegisterTargetDtosInModule<RelatedDtoLoaderTestBaseModule>();
             });
 
             context.Services

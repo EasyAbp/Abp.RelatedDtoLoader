@@ -8,7 +8,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests.Loader
         {
             UseRepositoryLoader<ProductDto, Product>();
 
-            EnableTargetDto<OrderDto>();
+            RegisterTargetDto<OrderDto>();
         }
     }
 }

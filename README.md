@@ -61,7 +61,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
                 UseLoader(GetOrderDtosAsync);
 
                 // a target type need to be enabled to load its related Dtos properties.
-                // EnableTargetDto<OrderDto>();
+                // RegisterTargetDto<OrderDto>();
             }
         }
     ```
@@ -77,10 +77,40 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
             {
                 // add the Profile
                 options.AddProfile<MyProjectRelatedDtoLoaderProfile>();
+            });
 
-                // adding module will auto add all the profiles in its assembly,
-                // and auto enable the target dto types that contain any property with RelatedDto attribute.
-                options.AddModule<MyApplicationContractsModule>();
+            // ...
+        }
+    ```
+
+1. Enable the target type to load its related Dto properties
+
+    either in the Profile
+
+    ```csharp
+        public class MyProjectRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
+        {
+            public MyRelatedDtoLoaderProfile()
+            {             
+                // ...
+                   
+                // a target type need to be enabled to load its related Dtos properties.
+                RegisterTargetDto<OrderDto>();
+            }
+        }
+    ```
+
+    or via `RegisterTargetDtosInModule method` of RelatedDtoLoaderOptions
+
+    ```csharp
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            // ...
+
+            Configure<RelatedDtoLoaderOptions>(options =>
+            {                                
+                // adding module will auto register all the target dto types which contain any property with RelatedDto attribute.
+                options.RegisterTargetDtosInModule<MyApplicationContractsModule>();
             });
 
             // ...
