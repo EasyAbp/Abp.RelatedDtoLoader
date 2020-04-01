@@ -24,8 +24,13 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
                 options.AddProfile<MyGuidTestAutoMapperProfile>();
             });
 
+            Configure<RelatedDtoLoaderOptions>(options =>
+            {
+                options.AddProfile<MyGuidRelatedDtoLoaderProfile>();
+                options.AddModule<RelatedDtoLoaderTestBaseModule>();
+            });
+
             context.Services
-                .AddSingleton<IRelatedDtoLoaderProfile, MyGuidRelatedDtoLoaderProfile>()
                 .AddSingleton<MyGuidTestData>()
                 .AddSingleton<MyIntegerTestDataBuilder>()
                 ;

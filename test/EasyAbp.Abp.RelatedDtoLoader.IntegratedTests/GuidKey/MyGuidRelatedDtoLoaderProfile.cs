@@ -8,9 +8,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
         public MyGuidRelatedDtoLoaderProfile() 
             : base()
         {
-            AddModule<RelatedDtoLoaderTestBaseModule>();
-
-            CreateRule<ProductDto, Product>();
+            UseRepositoryLoader<ProductDto, Product>();
         }
     }
 }

@@ -6,95 +6,93 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.ObjectMapping;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
-    public abstract class RelatedDtoLoaderProfile : IRelatedDtoLoaderProfile, ISingletonDependency
+    public abstract class RelatedDtoLoaderProfile : IRelatedDtoLoaderProfile
     {
-        private ConcurrentDictionary<Type, IDtoLoadRule> RelatedDtoRules { get; }
+        private Dictionary<Type, IDtoLoadRule> _dtoLoaderRules = new Dictionary<Type, IDtoLoadRule>();
 
-        private readonly ConcurrentDictionary<Type, RelatedDtoPropertyCollection> _targetDtoPropertyCollection = new ConcurrentDictionary<Type, RelatedDtoPropertyCollection>();
-
-        private static readonly Type EntityDtoType = typeof(IEntityDto);
+        private readonly Dictionary<Type, RelatedDtoPropertyCollection> _targetDtoPropertyCollection = new Dictionary<Type, RelatedDtoPropertyCollection>();
 
         public RelatedDtoLoaderProfile()
         {
-            RelatedDtoRules = new ConcurrentDictionary<Type, IDtoLoadRule>();
+
         }
 
-        protected void AddModule<TType>()
+        public IReadOnlyDictionary<Type, IDtoLoadRule> DtoLoaderRules => _dtoLoaderRules;
+
+        public IReadOnlyDictionary<Type, RelatedDtoPropertyCollection> TargetDtoPropertyCollections => _targetDtoPropertyCollection;
+
+        public IDtoLoadRule UseRepositoryLoader<TDto, TEntity>()
+             where TDto : class, IEntityDto<Guid>
+             where TEntity : class, IEntity<Guid>
         {
-            var dtoTypes = typeof(TType).Assembly.GetTypes().Where(x => EntityDtoType.IsAssignableFrom(x)).ToArray();
-
-            foreach (var dtoType in dtoTypes)
-            {
-                TryRegisterTargetDto(dtoType);
-            }
+            return this.UseRepositoryLoader<TDto, TEntity, Guid>();
         }
 
-        protected void RegisterTargetDto<TTargetDto>()
-            where TTargetDto : class
-        {
-            TryRegisterTargetDto(typeof(TTargetDto));
-        }
-
-        private void TryRegisterTargetDto(Type targetDtoType)
-        {
-            if (_targetDtoPropertyCollection.ContainsKey(targetDtoType))
-                return;
-
-            var props = new RelatedDtoPropertyCollection(targetDtoType);
-
-            if (props.Any())
-            {
-                _targetDtoPropertyCollection.TryAdd(targetDtoType, props);
-            }
-        }
-
-        protected IDtoLoadRule CreateRule<TDto, TEntity>()
-            where TDto : class, IEntityDto<Guid>
-            where TEntity : class, IEntity<Guid>
-        {
-            return CreateRule<TDto, TEntity, Guid>();
-        }
-
-        protected IDtoLoadRule CreateRule<TDto, TEntity, TKey>()
+        public IDtoLoadRule UseRepositoryLoader<TDto, TEntity, TKey>()
             where TDto : class, IEntityDto<TKey>
             where TEntity : class, IEntity<TKey>
         {
-            var rule = new EntityDtoLoadRule<TDto, TEntity, TKey>();
-
-            RelatedDtoRules[typeof(TDto)] = rule;
+            var source = BuildRepositoryLoader<TDto, TEntity, TKey>();
+            var rule = UseLoader(source);
 
             return rule;
         }
 
-        protected IDtoLoadRule CreateRule<TDto>(Func<IServiceProvider, IEnumerable<Guid>, Task<IEnumerable<TDto>>> source)
-            where TDto : class, IEntityDto<Guid>
+        public static Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> BuildRepositoryLoader<TDto, TEntity, TKey>()
+            where TEntity : class, IEntity<TKey>
+            where TDto : class, IEntityDto<TKey>
         {
-            return CreateRule<TDto, Guid>(source);
+            Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> source = async (serviceProvider, ids) =>
+            {
+                var repository = serviceProvider.GetService<IReadOnlyRepository<TEntity, TKey>>();
+                var objectMapper = serviceProvider.GetService<IObjectMapper>();
+
+                var relatedDtos = new List<TEntity>();
+
+                foreach (var id in ids)
+                {
+                    relatedDtos.Add(id == null ? null : await repository.GetAsync(id));
+                }
+
+                return objectMapper.Map<IEnumerable<TEntity>, TDto[]>(relatedDtos);
+            };
+
+            return source;
         }
 
-        protected IDtoLoadRule CreateRule<TDto, TKey>(Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
+        public IDtoLoadRule UseLoader<TDto>(Func<IServiceProvider, IEnumerable<Guid>, Task<IEnumerable<TDto>>> source)
+            where TDto : class, IEntityDto<Guid>
+        {
+            return UseLoader<TDto, Guid>(source);
+        }
+
+        public IDtoLoadRule UseLoader<TDto, TKey>(Func<IServiceProvider, IEnumerable<TKey>, Task<IEnumerable<TDto>>> source)
             where TDto : class, IEntityDto<TKey>
         {
             var rule = new DtoLoadRule<TDto, TKey>(source);
 
-            RelatedDtoRules[typeof(TDto)] = rule;
+            _dtoLoaderRules[typeof(TDto)] = rule;
 
             return rule;
         }
 
-        public IDtoLoadRule GetRule(Type type)
+        public void EnableTargetDto<TTargetDto>()
         {
-            return !RelatedDtoRules.TryGetValue(type, out var rule) ? null : rule;
+            EnableTargetDto(typeof(TTargetDto));
         }
 
-        public RelatedDtoPropertyCollection GetRelatedDtoProperties(Type targetDtoType)
+        public void EnableTargetDto(Type targetDtoType)
         {
-            return _targetDtoPropertyCollection.ContainsKey(targetDtoType)
-                ? _targetDtoPropertyCollection[targetDtoType] 
-                : null;
+            var props = new RelatedDtoPropertyCollection(targetDtoType);
+
+            if (props.Any())
+                _targetDtoPropertyCollection[targetDtoType] = props;
         }
     }
 }

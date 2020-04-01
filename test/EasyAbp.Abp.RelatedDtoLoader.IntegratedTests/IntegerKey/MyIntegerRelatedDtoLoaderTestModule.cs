@@ -23,6 +23,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
                 options.AddProfile<MyIntegerTestAutoMapperProfile>();
             });
 
+            Configure<RelatedDtoLoaderOptions>(options =>
+            {
+                options.AddProfile<MyIntegerRelatedDtoLoaderProfile>();
+                options.AddModule<MyIntegerRelatedDtoLoaderTestModule>();
+            });
+
             context.Services
                 .AddSingleton<IRelatedDtoLoaderProfile, MyIntegerRelatedDtoLoaderProfile>()
                 .AddSingleton<MyIntegerTestData>()

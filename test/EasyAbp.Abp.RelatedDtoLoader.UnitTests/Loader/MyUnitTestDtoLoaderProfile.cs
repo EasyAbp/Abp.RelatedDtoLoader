@@ -9,11 +9,9 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
         public MyUnitTestDtoLoaderProfile()
             : base()
         {
-            AddModule<RelatedDtoLoaderTestBaseModule>();
+            UseRepositoryLoader<ProductDto, Product>();
 
-            RegisterTargetDto<OrderDto>();
-
-            CreateRule<ProductDto, Product>();
+            EnableTargetDto<OrderDto>();
         }
     }
 }

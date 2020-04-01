@@ -8,9 +8,9 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Tests.IntegratedTests
         public MyIntegerRelatedDtoLoaderProfile() 
             : base()
         {
-            AddModule<RelatedDtoLoaderTestBaseModule>();
+            UseRepositoryLoader<IntProductDto, IntProduct, int>();            
 
-            CreateRule<IntProductDto, IntProduct, int>();
+            EnableTargetDto<IntOrderDto>();
         }
     }
 }

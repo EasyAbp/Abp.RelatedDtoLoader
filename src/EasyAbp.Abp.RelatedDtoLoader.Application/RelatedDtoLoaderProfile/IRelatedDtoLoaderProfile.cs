@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
     public interface IRelatedDtoLoaderProfile
     {
-        RelatedDtoPropertyCollection GetRelatedDtoProperties(Type targetDtoType);
+        IReadOnlyDictionary<Type, IDtoLoadRule> DtoLoaderRules { get; }
 
-        IDtoLoadRule GetRule(Type type);
+        IReadOnlyDictionary<Type, RelatedDtoPropertyCollection> TargetDtoPropertyCollections { get; }
     }
 }

@@ -111,21 +111,23 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
 
         private static RelatedDtoLoader GetRelatedDtoLoader(MyUnitTestData testData)
         {
+            var fakeConfig = new Mock<IDtoLoaderConfigurationProvider>();
+
             var fakeProfile = new Mock<IRelatedDtoLoaderProfile>();
 
-            FackProduct(testData, fakeProfile);
-            FackProductComment(testData, fakeProfile);
+            FackProduct(testData, fakeConfig);
+            FackProductComment(testData, fakeConfig);
 
             var orderRelatedDtoProperties = new RelatedDtoPropertyCollection(typeof(OrderDto));
-            fakeProfile.Setup(x => x.GetRelatedDtoProperties(typeof(OrderDto)))
+            fakeConfig.Setup(x => x.GetRelatedDtoProperties(typeof(OrderDto)))
                 .Returns(orderRelatedDtoProperties);
 
-            var dtoLoader = new RelatedDtoLoader(null, fakeProfile.Object);
+            var dtoLoader = new RelatedDtoLoader(null, fakeConfig.Object);
 
             return dtoLoader;
         }
 
-        private static void FackProduct(MyUnitTestData testData, Mock<IRelatedDtoLoaderProfile> fakeProfile)
+        private static void FackProduct(MyUnitTestData testData, Mock<IDtoLoaderConfigurationProvider> fakeProfile)
         {
             var fakeRule = new Mock<IDtoLoadRule>();
 
@@ -138,7 +140,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             fakeRule.Setup(x => x.GetKey(It.IsAny<object>()))
                 .Returns<object>(x => { return ((ProductDto)x).Id; });
 
-            fakeProfile.Setup(x => x.GetRule(typeof(ProductDto)))
+            fakeProfile.Setup(x => x.GetLoadRule(typeof(ProductDto)))
                 .Returns(fakeRule.Object);
 
             var productRelatedDtoProperties = new RelatedDtoPropertyCollection(typeof(ProductDto));
@@ -147,7 +149,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
                 .Returns(productRelatedDtoProperties);
         }
 
-        private static void FackProductComment(MyUnitTestData testData, Mock<IRelatedDtoLoaderProfile> fakeProfile)
+        private static void FackProductComment(MyUnitTestData testData, Mock<IDtoLoaderConfigurationProvider> fakeProfile)
         {
             var fakeRule = new Mock<IDtoLoadRule>();
 
@@ -160,7 +162,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.UnitTests
             fakeRule.Setup(x => x.GetKey(It.IsAny<object>()))
                 .Returns<object>(x => { return ((ProductCommentDto)x).Id; });
 
-            fakeProfile.Setup(x => x.GetRule(typeof(ProductCommentDto)))
+            fakeProfile.Setup(x => x.GetLoadRule(typeof(ProductCommentDto)))
                 .Returns(fakeRule.Object);
         }
     }

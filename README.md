@@ -52,17 +52,45 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
     ```
         public class MyProjectRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
         {
-            public MyRelatedDtoLoaderProfile(IServiceProvider serviceProvider) : base(serviceProvider)
-            {
-                // These rules will get entities from generic repository and map them to DTOs.
+            public MyRelatedDtoLoaderProfile()
+            {                
+                // register loader
+
+                // the following example gets entities from repository and map them to DTOs.
                 
-                CreateRule<ProductDto, Product>();  // For Guid (by default) primary key.
-                CreateRule<CityDto, City, int>();   // For int primary key.
+                UseRepositoryLoader<ProductDto, Product>();  // For Guid (by default) primary key.
+                UseRepositoryLoader<CityDto, City, int>();   // For int primary key.
                 
-                // Custom DTO source.
+                // or load it by a customized function.
                 
-                CreateRule(GetOrderDtosAsync);
+                UseLoader(GetOrderDtosAsync);
+
+                // a target type need to be enabled to load its related Dtos properties.
+
+                // EnableTargetDto<OrderDto>();
             }
+        }
+    ```
+
+1. Configure the RelatedDtoLoader to use the profile
+
+    ```
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            // ...
+
+            Configure<RelatedDtoLoaderOptions>(options =>
+            {
+                // add the Profile
+
+                options.AddProfile<MyProjectRelatedDtoLoaderProfile>();
+
+                // adding module will auto add all the profiles in its aseembly, and auto enable the target dto types that contain any property with RelatedDto attribute.
+
+                options.AddModule<MyApplicationContractsModule>();
+            });
+
+            // ...
         }
     ```
 

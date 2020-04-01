@@ -13,12 +13,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader
     {
         private readonly IServiceProvider _serviceProvider;
 
-        private readonly IRelatedDtoLoaderProfile _profile;
+        private readonly IDtoLoaderConfigurationProvider _configuration;
 
-        public RelatedDtoLoader(IServiceProvider serviceProvider, IRelatedDtoLoaderProfile profile)
+        public RelatedDtoLoader(IServiceProvider serviceProvider, IDtoLoaderConfigurationProvider profile)
         {
             _serviceProvider = serviceProvider;
-            _profile = profile;
+            _configuration = profile;
         }
 
         public async Task<IEnumerable<TTargetDto>> LoadListAsync<TTargetDto, TKeyProvider>(IEnumerable<TTargetDto> targetDtos, IEnumerable<TKeyProvider> keyProviders)
@@ -27,7 +27,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
         {
             var targetDtoType = typeof(TTargetDto);
 
-            var relatedDtoProperties = _profile.GetRelatedDtoProperties(targetDtoType);
+            var relatedDtoProperties = _configuration.GetRelatedDtoProperties(targetDtoType);
 
             if (relatedDtoProperties == null)
             {
@@ -67,7 +67,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader
                     continue;
                 }
 
-                var loaderRule = _profile.GetRule(dtoType.ElementType);
+                var loaderRule = _configuration.GetLoadRule(dtoType.ElementType);
 
                 if (loaderRule == null)
                 {
