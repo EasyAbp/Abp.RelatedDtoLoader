@@ -7,7 +7,6 @@ using Volo.Abp.Modularity;
 
 namespace EasyAbp.Abp.RelatedDtoLoader
 {
-    [DependsOn(typeof(AbpRelatedDtoLoaderAbstractionsModule))]
     public class AbpRelatedDtoLoaderModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)

@@ -55,7 +55,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
                 {
                     if (EntityDtoType.IsAssignableFrom(type))
                     {
-                        dynamicLoaderProfile.RegisterTargetDto(type);
+                        dynamicLoaderProfile.LoadForDto(type);
                     }
                 }
             }

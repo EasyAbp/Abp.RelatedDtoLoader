@@ -25,7 +25,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
             Configure<RelatedDtoLoaderOptions>(options =>
             {
                 options.AddProfile<MyIntegerRelatedDtoLoaderProfile>();
-                options.RegisterTargetDtosInModule<MyIntegerRelatedDtoLoaderTestModule>();
+                options.LoadForDtosInModule<MyIntegerRelatedDtoLoaderTestModule>();
             });
 
             context.Services
