@@ -119,12 +119,12 @@ namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoaderProfile
             return rule;
         }
 
-        public void RegisterTargetDto<TTargetDto>()
+        public void LoadForDto<TTargetDto>()
         {
-            RegisterTargetDto(typeof(TTargetDto));
+            LoadForDto(typeof(TTargetDto));
         }
 
-        public void RegisterTargetDto(Type targetDtoType)
+        public void LoadForDto(Type targetDtoType)
         {
             var props = new RelatedDtoPropertyCollection(targetDtoType);
 

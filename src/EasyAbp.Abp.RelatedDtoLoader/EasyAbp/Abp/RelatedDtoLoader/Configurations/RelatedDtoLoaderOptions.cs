@@ -13,7 +13,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.Configurations
 
         public List<Action<IRelatedDtoLoaderConfigurationContext>> Configurators { get; }
 
-        public RelatedDtoLoaderAssemblyOptions RegisterTargetDtosInModule<TModule>()
+        public RelatedDtoLoaderAssemblyOptions LoadForDtosInModule<TModule>()
         {
             var assembly = typeof(TModule).Assembly;
 
