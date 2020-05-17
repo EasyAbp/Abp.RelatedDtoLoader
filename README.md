@@ -152,6 +152,7 @@ See more: [Custom DTO source examples](doc/CustomDtoSource.md).
 - [x] Support multi module development
 - [ ] Support nested DTOs loading
 - [ ] Get duplicate DTO from memory
+- [ ] DTO cache
 - [ ] An option to enable loading deleted DTO
 - [x] Unit test
 
