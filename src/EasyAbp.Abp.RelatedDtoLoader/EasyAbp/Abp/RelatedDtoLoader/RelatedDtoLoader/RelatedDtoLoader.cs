@@ -111,7 +111,8 @@ namespace EasyAbp.Abp.RelatedDtoLoader.RelatedDtoLoader
 
             var keyProviderWithIds =
                 arrKeyProviders.ToDictionary(x => x, keyProvider => idType.Property.GetValue(keyProvider));
-            var idsToLoad = keyProviderWithIds.Values.Where(x => x != null).ToArray();
+
+            var idsToLoad = keyProviderWithIds.Values.Where(x => x != null).Distinct().ToArray();
 
             Dictionary<object, object> dictLoadedDtos = null;
 
