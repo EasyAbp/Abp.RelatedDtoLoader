@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/EasyAbp/Abp.RelatedDtoLoader</RepositoryUrl>
     <PackageTags>abp module easyabp dto related loader ddd</PackageTags>
     <Company>EasyAbp</Company>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
