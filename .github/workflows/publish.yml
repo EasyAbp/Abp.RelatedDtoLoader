@@ -27,7 +27,7 @@ jobs:
           # PACKAGE_NAME: NuGet package name, required when it's different from project name. Defaults to project name
           
       - name: publish RelatedDtoLoader.Abstractions.dll
-        uses: brandedoutcast/publish-nuget@v2.5.0
+        uses: brandedoutcast/publish-nuget@v2.5.2
         with:
           PROJECT_FILE_PATH: src/EasyAbp.Abp.RelatedDtoLoader.Abstractions/EasyAbp.Abp.RelatedDtoLoader.Abstractions.csproj
           VERSION_FILE_PATH: common.props
