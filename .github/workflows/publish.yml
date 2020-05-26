@@ -18,7 +18,7 @@ jobs:
       #     dotnet-version: 3.1.100
       
       # Publish
-      - name: publish RelatedDtoLoader.dll
+      - name: publish EasyAbp.Abp.RelatedDtoLoader.dll
         uses: brandedoutcast/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src/EasyAbp.Abp.RelatedDtoLoader/EasyAbp.Abp.RelatedDtoLoader.csproj # Relative to repository root
@@ -26,7 +26,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}} # nuget.org API key
           # PACKAGE_NAME: NuGet package name, required when it's different from project name. Defaults to project name
           
-      - name: publish RelatedDtoLoader.Abstractions.dll
+      - name: publish EasyAbp.Abp.RelatedDtoLoader.Abstractions.dll
         uses: brandedoutcast/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src/EasyAbp.Abp.RelatedDtoLoader.Abstractions/EasyAbp.Abp.RelatedDtoLoader.Abstractions.csproj
