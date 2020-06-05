@@ -1,5 +1,8 @@
 # RelatedDtoLoader
 
+[![NuGet](https://img.shields.io/nuget/v/EasyAbp.Abp.RelatedDtoLoader.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.RelatedDtoLoader)
+[![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.Abp.RelatedDtoLoader.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.Abp.RelatedDtoLoader)
+
 An Abp module that help you automatically load related DTO (like ProductDto in OrderDto) under DDD.
 
 ## Getting Started
