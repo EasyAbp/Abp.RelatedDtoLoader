@@ -5,30 +5,33 @@ on:
       - master # Default release branch
 jobs:
   publish:
-    name: list on nuget
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      # Required for a specific dotnet version that doesn't come with ubuntu-latest / windows-latest
-      # Visit bit.ly/2synnZl to see the list of SDKs that are pre-installed with ubuntu-latest / windows-latest
-      # - name: Setup dotnet
-      #   uses: actions/setup-dotnet@v1
-      #   with:
-      #     dotnet-version: 3.1.100
-      
-      # Publish
-      - name: publish EasyAbp.Abp.RelatedDtoLoader.dll
-        uses: brandedoutcast/publish-nuget@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
         with:
-          PROJECT_FILE_PATH: src/EasyAbp.Abp.RelatedDtoLoader/EasyAbp.Abp.RelatedDtoLoader.csproj # Relative to repository root
-          VERSION_FILE_PATH: common.props # Filepath with version info, relative to repository root. Defaults to project file
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}} # nuget.org API key
-          # PACKAGE_NAME: NuGet package name, required when it's different from project name. Defaults to project name
-          
-      - name: publish EasyAbp.Abp.RelatedDtoLoader.Abstractions.dll
-        uses: brandedoutcast/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/EasyAbp.Abp.RelatedDtoLoader.Abstractions/EasyAbp.Abp.RelatedDtoLoader.Abstractions.csproj
-          VERSION_FILE_PATH: common.props
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          dotnet-version: 3.1.200
+          source-url: https://nuget.pkg.github.com/EasyAbp/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: dotnet build
+        run: dotnet build -c Release
+
+      - name: dotnet pack
+        run: dotnet pack -c Release --no-build -o dest
+
+      - name: remove unused packages
+        run: |
+          cd dest
+          ls | grep -v EasyAbp. | xargs rm -f
+          ls | grep HttpApi.Client.ConsoleTestApp | xargs rm -f
+          ls
+
+      - name: dotnet nuget push to GitHub
+        run: dotnet nuget push ./dest/**/*.nupkg --skip-duplicate --no-symbols true
+
+      - name: dotnet nuget push to NuGet
+        run: dotnet nuget push ./dest/**/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols true
