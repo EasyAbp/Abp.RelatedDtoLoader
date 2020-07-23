@@ -13,7 +13,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 * Install Manually
 
-    1. Install `EasyAbp.Abp.RelatedDtoLoader.Abstractions` NuGet package to `MyProject.Application.Contracts` project and add `[DependsOn(AbpRelatedDtoLoaderAbstractionsModule)]` attribute to the module.
+    1. Install `EasyAbp.Abp.RelatedDtoLoader.Abstractions` NuGet package to `MyProject.Application.Contracts` project.
     
     1. Install `EasyAbp.Abp.RelatedDtoLoader` NuGet package to `MyProject.Application` project (or any other project you want) and add `[DependsOn(AbpRelatedDtoLoaderModule)]` attribute to the module.
 
