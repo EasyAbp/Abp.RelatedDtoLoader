@@ -1,28 +1,27 @@
 # Example 1
 
 Get DTOs from application service
-
 ```
-    public class MyProjectRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
+public class MyProjectRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
+{
+    public MyProjectRelatedDtoLoaderProfile(IServiceProvider serviceProvider) : base(serviceProvider)
     {
-        public MyProjectRelatedDtoLoaderProfile(IServiceProvider serviceProvider) : base(serviceProvider)
+        CreateRule<ProductDto>(async ids =>
         {
-            CreateRule<ProductDto>(async ids =>
+            var dtos = new List<ProductDto>();
+            
+            using (var scope = serviceProvider.CreateScope())
             {
-                var dtos = new List<ProductDto>();
+                var productAppService = scope.ServiceProvider.GetService<IProductAppService>();
                 
-                using (var scope = serviceProvider.CreateScope())
+                foreach (var id in ids)
                 {
-                    var productAppService = scope.ServiceProvider.GetService<IProductAppService>();
-                    
-                    foreach (var id in ids)
-                    {
-                        dtos.Add(await productAppService.GetAsync(id));
-                    }
+                    dtos.Add(await productAppService.GetAsync(id));
                 }
+            }
 
-                return dtos;
-            });
-        }
+            return dtos;
+        });
     }
+}
 ```
