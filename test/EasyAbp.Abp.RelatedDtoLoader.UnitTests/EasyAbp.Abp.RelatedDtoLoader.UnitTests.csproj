@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -12,8 +12,8 @@
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
-    <PackageReference Include="Volo.Abp.Ddd.Domain" Version="2.3.0" />
-    <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="2.3.0" />
+    <PackageReference Include="Volo.Abp.Ddd.Domain" Version="3.2.1" />
+    <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
