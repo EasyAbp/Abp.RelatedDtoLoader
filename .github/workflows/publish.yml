@@ -6,30 +6,62 @@ on:
       - main
 jobs:
   publish:
-    name: list on nuget
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: NuGet/setup-nuget@v1.0.5
 
-      # Required for a specific dotnet version that doesn't come with ubuntu-latest / windows-latest
-      # Visit bit.ly/2synnZl to see the list of SDKs that are pre-installed with ubuntu-latest / windows-latest
-      # - name: Setup dotnet
-      #   uses: actions/setup-dotnet@v1
-      #   with:
-      #     dotnet-version: 3.1.100
-      
-      # Publish
-      - name: publish RelatedDtoLoader.dll
-        uses: brandedoutcast/publish-nuget@v2.5.2
+      - name: read project file
+        id: commonProps
+        uses: juliangruber/read-file-action@v1
         with:
-          PROJECT_FILE_PATH: src/EasyAbp.Abp.RelatedDtoLoader/EasyAbp.Abp.RelatedDtoLoader.csproj # Relative to repository root
-          VERSION_FILE_PATH: common.props # Filepath with version info, relative to repository root. Defaults to project file
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}} # nuget.org API key
-          # PACKAGE_NAME: NuGet package name, required when it's different from project name. Defaults to project name
-          
-      - name: publish RelatedDtoLoader.Abstractions.dll
-        uses: brandedoutcast/publish-nuget@v2.5.2
+          path: ./EasyAbp.Abp.BlobStoring.TencentCloud/EasyAbp.Abp.BlobStoring.TencentCloud.csproj
+
+      - name: get version
+        id: getVersion
+        uses: AsasInnab/regex-action@v1
         with:
-          PROJECT_FILE_PATH: src/EasyAbp.Abp.RelatedDtoLoader.Abstractions/EasyAbp.Abp.RelatedDtoLoader.Abstractions.csproj
-          VERSION_FILE_PATH: common.props
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          regex_pattern: '(?<=>)[^<>]+(?=</Version>)'
+          regex_flags: 'gim'
+          search_string: '${{ steps.commonProps.outputs.content }}'
+
+      - name: dotnet build
+        run: dotnet build -c Release
+
+      - name: dotnet pack
+        run: dotnet pack -c Release --no-build -o dest
+
+      - name: remove unused packages
+        run: |
+          cd dest
+          del * -Exclude EasyAbp.*
+          del * -Exclude *.${{ steps.getVersion.outputs.first_match }}.nupkg
+          del *.HttpApi.Client.ConsoleTestApp*
+          del *.Host.Shared*
+          dir -name
+
+      - name: dotnet nuget push to GitHub
+        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+        with:
+          nupkg-path:  'dest\*.nupkg'
+          repo-owner:  'EasyAbp'
+          gh-user:  'EasyAbp'
+          token:  ${{ secrets.GITHUB_TOKEN }}
+
+      - name: dotnet nuget push to NuGet
+        run: dotnet nuget push dest\*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: determine if the tag exists
+        uses: mukunku/tag-exists-action@v1.0.0
+        id: checkTag
+        with:
+          tag: ${{ steps.getVersion.outputs.first_match }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: add git tag
+        if: ${{ steps.checkTag.outputs.exists == 'false' }}
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.getVersion.outputs.first_match }}
