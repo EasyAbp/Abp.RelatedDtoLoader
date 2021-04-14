@@ -126,7 +126,7 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 		public async Task<OrderDto> GetAsync(Guid id)
 		{
-			var order = _orderRepository.GetAsync(id);
+			var order = await _orderRepository.GetAsync(id);
 
 			var orderDto = ObjectMapper.Map<Order, OrderDto>(order);
 
