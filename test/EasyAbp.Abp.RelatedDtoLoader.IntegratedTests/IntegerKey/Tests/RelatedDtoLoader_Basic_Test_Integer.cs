@@ -27,7 +27,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey.Tests
         {
             await WithUnitOfWorkAsync(async () =>
             {
-                var order = _orderRepository.FirstOrDefault();
+                var order = await _orderRepository.FirstOrDefaultAsync();
 
                 var orderDto = ObjectMapper.Map<IntOrder, IntOrderDto>(order);
 
