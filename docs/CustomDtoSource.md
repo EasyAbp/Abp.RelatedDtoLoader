@@ -1,7 +1,7 @@
 # Example 1
 
 Get DTOs from application service
-```
+```csharp
 public class MyProjectRelatedDtoLoaderProfile : RelatedDtoLoaderProfile
 {
     public MyProjectRelatedDtoLoaderProfile(IServiceProvider serviceProvider) : base(serviceProvider)
