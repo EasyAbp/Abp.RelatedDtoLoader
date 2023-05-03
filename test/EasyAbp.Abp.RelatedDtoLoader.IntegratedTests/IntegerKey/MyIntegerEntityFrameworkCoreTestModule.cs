@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
+using Volo.Abp.Uow;
 
 namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
 {
@@ -20,6 +21,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.IntegerKey
         {
             context.Services.AddAbpDbContext<MyIntegerDbContext>(options => { options.AddDefaultRepositories(true); });
 
+            context.Services.AddAlwaysDisableUnitOfWorkTransaction();
             _sqliteConnection = CreateDatabaseAndGetConnection();
 
             Configure<AbpDbContextOptions>(options =>

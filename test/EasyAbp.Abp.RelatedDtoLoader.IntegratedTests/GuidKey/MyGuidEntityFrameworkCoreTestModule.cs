@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
+using Volo.Abp.Uow;
 
 namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
 {
@@ -22,6 +23,7 @@ namespace EasyAbp.Abp.RelatedDtoLoader.IntegratedTests.GuidKey
         {
             context.Services.AddAbpDbContext<MyGuidDbContext>(options => { options.AddDefaultRepositories(true); });
 
+            context.Services.AddAlwaysDisableUnitOfWorkTransaction();
             _sqliteConnection = CreateDatabaseAndGetConnection();
 
             Configure<AbpDbContextOptions>(options =>
