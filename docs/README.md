@@ -40,8 +40,13 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 	{
 		public Guid ProductId { get; set; }
 
+		//Automatic matching rules $"{nameof(Product)}Id"
 		[RelatedDto]
 		public ProductDto Product { get; set; }
+
+		//Manually matching the ProductId
+		[RelatedDto(nameof(ProductId))]
+		public ProductDto ProductInfo { get; set; }
 	}
     ```
 
@@ -130,7 +135,16 @@ An Abp module that help you automatically load related DTO (like ProductDto in O
 
 			var orderDto = ObjectMapper.Map<Order, OrderDto>(order);
 
+			//LoadAsync
 			return await _relatedDtoLoader.LoadAsync(orderDto);   // orderDto.Product should have been loaded.
+		}
+		
+		protected override async Task<List<OrderDto>> MapToGetListOutputDtosAsync(List<Order> entities)
+		{
+			var orderDtos = await base.MapToGetListOutputDtosAsync(entities);
+			
+			//LoadListAsync
+			return (await _relatedDtoLoader.LoadListAsync(orderDtos)).ToList(); // OrderDto.Product should have been loaded.
 		}
 	}
     ```
